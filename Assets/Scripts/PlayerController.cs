@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Animator animator;
     
+    private bool isGrounded = true;
+    
     public float WalkSpeed 
     { 
         get { return movementSystem?.WalkSpeed ?? 15f; } 
@@ -63,6 +65,7 @@ public class PlayerController : MonoBehaviour
             
         movementSystem.Initialize(rb);
         animationSystem.Initialize(animator);
+        isGrounded = true;
         
         print("PlayerController initialization complete!");
     }
@@ -93,5 +96,23 @@ public class PlayerController : MonoBehaviour
         movementSystem.HandleMovement(inputDirection, isRunning);
         movementSystem.handlePlayerTurning(inputDirection);
         animationSystem?.SetMovementState(inputDirection.magnitude, isRunning);
+    }
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            movementSystem.IsGrounded = true;
+            animationSystem?.SetGrounded(true);
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            movementSystem.IsGrounded = false;
+            animationSystem?.SetGrounded(false);
+        }
     }
 }

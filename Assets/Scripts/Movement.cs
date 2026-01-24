@@ -10,8 +10,8 @@ public class Movement
     [SerializeField] private float rotationSpeed = 3f;
     
     private Rigidbody rb;
+    private bool isGrounded;
     
-    // Properties with getters and setters
     public float WalkSpeed 
     { 
         get { return walkSpeed; } 
@@ -36,20 +36,25 @@ public class Movement
         set { rotationSpeed = Mathf.Max(0, value); } 
     }
     
+    public bool IsGrounded 
+    { 
+        get { return isGrounded; } 
+        set { isGrounded = value; } 
+    }
+    
     public void Initialize(Rigidbody rigidbody)
     {
         rb = rigidbody;
+        isGrounded = true;
     }
     
     public void HandleMovement(Vector3 inputDirection, bool isRunning)
     {
-        // Only use vertical input (forward/backward) for movement
         float forwardInput = inputDirection.z;
         
         if (Mathf.Abs(forwardInput) > 0.1f)
         {
             float currentSpeed = isRunning ? runSpeed : walkSpeed;
-            // Move in the direction the player is facing, not input direction
             Vector3 movement = rb.transform.forward * forwardInput * currentSpeed;
             Vector3 newVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
             rb.linearVelocity = newVelocity;
@@ -62,12 +67,10 @@ public class Movement
     }
     public void handlePlayerTurning(Vector3 inputDirection)
     {
-        // Only use horizontal input for turning
         float horizontalInput = inputDirection.x;
         
         if (Mathf.Abs(horizontalInput) > 0.1f)
         {
-            // Rotate the player around Y-axis based on horizontal input
             float rotationAmount = horizontalInput * rotationSpeed * Time.deltaTime * 20f;
             rb.rotation = rb.rotation * Quaternion.Euler(0, rotationAmount, 0);
         }
@@ -75,9 +78,10 @@ public class Movement
     
     public void Jump()
     {
-        if (rb != null)
+        if (isGrounded && rb != null)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false; // Set to false immediately after jumping
         }
     }
 }

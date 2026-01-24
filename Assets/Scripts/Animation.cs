@@ -8,7 +8,7 @@ public class Animation
     [SerializeField] private float runAnimationSpeed = 2.5f;
     
     private Animator animator;
-    
+    private bool isGrounded = true;
     
     public void Initialize(Animator animatorComponent)
     {
@@ -16,7 +16,7 @@ public class Animation
        
             animator.SetFloat("running", 0f);
             animator.SetBool("jump", false);
-        
+            animator.SetBool("isGrounded", true);
     }
     
     public void SetMovementState(float movementMagnitude, bool isRunning)
@@ -35,9 +35,22 @@ public class Animation
     
     public void TriggerJump()
     {
-        if (animator != null)
+        if (animator != null && isGrounded)
         {
             animator.SetBool("jump", true);
+        }
+    }
+    
+    public void SetGrounded(bool grounded)
+    {
+        isGrounded = grounded;
+        if (animator != null)
+        {
+            animator.SetBool("isGrounded", grounded);
+            if (grounded)
+            {
+                animator.SetBool("jump", false);
+            }
         }
     }
 }
