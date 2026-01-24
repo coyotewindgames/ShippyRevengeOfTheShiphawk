@@ -1,53 +1,31 @@
 using UnityEngine;
 
+// Legacy wrapper for backward compatibility - Consider using GameManager instead
 public class AnimationController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public Animator animator;
-    private Rigidbody rb;
-    void Start()
+    [Header("Animation System")]
+    [SerializeField] private Animation animationSystem;
+    [SerializeField] private Animator animator;
+    
+    private void Start()
     {
-        animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
-        animator.SetFloat("running", 0f);
+        if (animator == null)
+            animator = GetComponent<Animator>();
+            
+        if (animationSystem == null)
+            animationSystem = new Animation();
+            
+        animationSystem.Initialize(animator);
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    // Public methods for external access
+    public void SetMovementState(float movementMagnitude, bool isRunning)
     {
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            animator.SetTrigger("jump");
-            animator.SetBool("jump", true);
-            rb.AddForce(Vector3.up * 5, ForceMode.Impulse);
-        }
-        else if (Input.GetKeyUp(KeyCode.Space))
-        {
-            animator.SetBool("jump", false);
-        }
-
-        handleMovement();
-
+        animationSystem?.SetMovementState(movementMagnitude, isRunning);
     }
-
-    void handleMovement()
+    
+    public void TriggerJump()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-
-        Vector3 movement = new Vector3(h, 0, v) * 15f;
-
-        if (movement.magnitude > 0.1f)
-        {
-            Vector3 newVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
-            rb.linearVelocity = newVelocity;
-            animator.SetFloat("running", 1f);
-        }
-        else
-        {
-            animator.SetFloat("running", 0f);
-        }
+        animationSystem?.TriggerJump();
     }
-
 }
