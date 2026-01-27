@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Vector3 offset = new Vector3(-0.29f, 10.15f, 1.29f);
     [SerializeField] private float smoothSpeed = 0.125f;
 
-    [SerializeField] private Vector3 cameraAngle = new Vector3(13f, 0f, 0f);
+    [SerializeField] private Vector3 cameraAngle = new Vector3(-7.8f, 0f, 0f);
 
     private void LateUpdate()
     {
