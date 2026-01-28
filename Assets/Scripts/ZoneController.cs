@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Linq.Expressions;
 
 public class ZoneController : MonoBehaviour
 {
@@ -20,30 +22,18 @@ public class ZoneController : MonoBehaviour
 
     void Start()
     {
-        // Try to auto-gather zones if none assigned in Inspector
-        if (zones == null || zones.Length == 0)
+        if (zones.Length == 0)
         {
-            var found = GameObject.FindGameObjectsWithTag("Zone");
-            if (found != null && found.Length > 0)
-            {
-                zones = new Transform[found.Length];
-                for (int i = 0; i < found.Length; i++) zones[i] = found[i].transform;
-            }
-            else
-            {
-                // fallback: use this object's immediate children
                 List<Transform> children = new List<Transform>();
                 foreach (Transform t in transform) children.Add(t);
                 zones = children.ToArray();
-            }
         }
-
-        StartCoroutine(SpawnLoop());
+        StartCoroutine(ProgressZone());
     }
 
-    IEnumerator SpawnLoop()
+    IEnumerator ProgressZone()
     {
-        if (zones == null || zones.Length == 0 || enemyPrefab == null)
+        if (zones.Length == 0 || enemyPrefab == null)
             yield break;
 
         currentIndex = 0;
@@ -52,18 +42,22 @@ public class ZoneController : MonoBehaviour
             Transform zone = zones[currentIndex];
             SpawnAtZone(zone);
 
-            float delay = Random.Range(minDelay, maxDelay);
+            float delay = UnityEngine.Random.Range(minDelay, maxDelay);
             yield return new WaitForSeconds(delay);
-
             currentIndex = (currentIndex + 1) % zones.Length;
-        }
-    }
 
+            if(currentIndex == zones.Length - 1)
+            {
+                Debug.Log("Completed all zones. Stopping Move.");
+                yield break;
+             }
+    }
+    }
     void SpawnAtZone(Transform zone)
     {
         if (zone == null) return;
-        Vector3 spawnPos = zone.position;
-        spawnPos.y += 0.5f; // spawn slightly above the plane
-        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        var spawnPos = new Vector3(zone.position.x, zone.position.y, UnityEngine.Random.Range(zone.position.z - 30f, zone.position.z -1f)   );
+        spawnPos.y += 0.5f; 
+        enemyPrefab.transform.position = spawnPos;
     }
 }

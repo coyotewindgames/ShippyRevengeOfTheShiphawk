@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Animator animator;
     
+    [Header("Input")]
+    [SerializeField] private bool useMouseForHorizontal = true;
+    [SerializeField] private float mouseSensitivity = 1f;
+    
     private bool isGrounded = true;
     
     public float WalkSpeed 
@@ -39,18 +43,6 @@ public class PlayerController : MonoBehaviour
     
     private void Start()
     {
-        print("PlayerController Start() called!");
-        
-        // Check if GameManager exists
-        if (GameManager.Instance != null)
-        {
-            print("GameManager exists!");
-        }
-        else
-        {
-            print("GameManager is NULL!");
-        }
-        
         if (rb == null)
             rb = GetComponent<Rigidbody>();
             
@@ -67,7 +59,6 @@ public class PlayerController : MonoBehaviour
         animationSystem.Initialize(animator);
         isGrounded = true;
         
-        print("PlayerController initialization complete!");
     }
 
     private void Update()
@@ -87,7 +78,16 @@ public class PlayerController : MonoBehaviour
     
     private void HandleMovement()
     {
-        float h = Input.GetAxis("Horizontal");
+        float h;
+        if (useMouseForHorizontal)
+        {
+            float norm = (Input.mousePosition.x / (float)Screen.width - 0.5f) * 2f; // -1..1 across screen
+            h = Mathf.Clamp(norm * mouseSensitivity, -1f, 1f);
+        }
+        else
+        {
+            h = Input.GetAxis("Horizontal");
+        }
         float v = Input.GetAxis("Vertical");
         Vector3 inputDirection = new Vector3(h, 0, v);
         
