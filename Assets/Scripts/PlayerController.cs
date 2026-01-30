@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
             
         if (animationSystem == null)
             animationSystem = new Animation();
-            
         movementSystem.Initialize(rb);
         animationSystem.Initialize(animator);
         isGrounded = true;
@@ -63,19 +62,10 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        HandleJump();
         HandleMovement();
     }
     
-    private void HandleJump()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            movementSystem.Jump();
-            animationSystem?.TriggerJump();
-        }
-    }
-    
+  
     private void HandleMovement()
     {
         float h;
@@ -97,7 +87,7 @@ public class PlayerController : MonoBehaviour
         movementSystem.handlePlayerTurning(inputDirection);
         animationSystem?.SetMovementState(inputDirection.magnitude, isRunning);
     }
-    
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))

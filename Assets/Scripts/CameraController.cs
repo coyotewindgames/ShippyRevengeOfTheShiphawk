@@ -1,28 +1,63 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [Header("Camera Settings")]
-    [SerializeField] private Transform target;
-    [SerializeField] private Vector3 offset = new Vector3(-0.29f, 10.15f, 1.29f);
-    [SerializeField] private float smoothSpeed = 0.125f;
+    [Header("Mouse Look")]
+    [SerializeField] private bool enableMouseLook = true;
+    [SerializeField] private bool lockCursor = true;
+    [SerializeField] private float mouseYawSensitivity = 2f;
+    [SerializeField] private float mousePitchSensitivity = 2f;
+    [SerializeField] private float pitchClamp = 80f;
 
-    [SerializeField] private Vector3 cameraAngle = new Vector3(-7.8f, 0f, 0f);
+    private float pitch;
+    private float yaw;
 
-    private void LateUpdate()
+    private void OnEnable()
     {
-        if (target != null)
+        ApplyCursorLock();
+    }
+
+    private void OnDisable()
+    {
+        if (lockCursor)
         {
-            Vector3 rotatedOffset = target.rotation * offset;
-            Vector3 desiredPosition = target.position + rotatedOffset;
-            Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-            transform.position = smoothedPosition;
-            
-            Vector3 targetEulerAngles = target.eulerAngles;
-            Vector3 desiredRotation = new Vector3(cameraAngle.x, targetEulerAngles.y + cameraAngle.y, cameraAngle.z);
-            transform.rotation = Quaternion.Euler(desiredRotation);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 
+    private void Start()
+    {
+        Vector3 euler = transform.localEulerAngles;
+        yaw = NormalizeAngle(euler.y);
+        pitch = NormalizeAngle(euler.x);
+        ApplyCursorLock();
+    }
+
+    private void Update()
+    {
+        if (!enableMouseLook) return;
+
+        float mouseX = Input.GetAxis("Mouse X") * mouseYawSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mousePitchSensitivity;
+
+        yaw += mouseX;
+        pitch -= mouseY;
+        pitch = Mathf.Clamp(pitch, -pitchClamp, pitchClamp);
+
+        transform.localRotation = Quaternion.Euler(pitch, yaw, 0f);
+    }
+
+    private void ApplyCursorLock()
+    {
+        if (!lockCursor) return;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private static float NormalizeAngle(float angle)
+    {
+        if (angle > 180f) angle -= 360f;
+        return angle;
+    }
 }

@@ -33,13 +33,6 @@ public class Animation
         }
     }
     
-    public void TriggerJump()
-    {
-        if (animator != null && isGrounded)
-        {
-            animator.SetBool("jump", true);
-        }
-    }
     
     public void SetGrounded(bool grounded)
     {
