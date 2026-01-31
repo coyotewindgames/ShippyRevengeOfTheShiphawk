@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// Legacy wrapper for backward compatibility - Consider using GameManager instead
 public class AnimationController : MonoBehaviour
 {
     [Header("Animation System")]
