@@ -9,6 +9,7 @@ TagManager:
   - Packable
   - canPickUp
   - Scanner
+  - ScanLaser
   layers:
   - Default
   - TransparentFX

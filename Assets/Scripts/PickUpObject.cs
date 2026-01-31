@@ -94,8 +94,7 @@ public class PickUpObject : MonoBehaviour
         {
             Vector3 offsetWorld = tempParent.transform.TransformDirection(holdOffset);
             transform.position = tempParent.transform.position + offsetWorld;
-            Vector3 holderEuler = tempParent.transform.eulerAngles;
-            transform.rotation = Quaternion.Euler(0f, holderEuler.y, 0f);
+            transform.localRotation = Quaternion.identity;
         }
         }
     }   

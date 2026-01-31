@@ -14,7 +14,7 @@ public class ScannerController : MonoBehaviour
     [SerializeField] private float pickupForwardOffset = 0.5f;
     [SerializeField] private Camera scannerCamera;
     [Header("Aim Offset")]
-    [SerializeField] private float aimPitchOffset = 0f; // Adjust if scanner model is tilted
+    [SerializeField] private float aimPitchOffset = 1f; // Adjust if scanner model is tilted
     [Header("Laser")]
     [SerializeField] private GameObject laserPrefab;
     [SerializeField] private float laserDuration = 0.1f;
@@ -48,13 +48,10 @@ public class ScannerController : MonoBehaviour
     public void OnScannerPickedUp()
     {
         if (scanner == null) return;
-        if (holderTransform != null)
-        {
-            Vector3 forward = holderTransform.forward;
-            forward.y = 0f;
-            if (forward.sqrMagnitude > 0.0001f)
-                scanner.transform.rotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
-        }
+        
+        // Reset rotation to 0,0,0 as requested
+        scanner.transform.localRotation = Quaternion.identity;
+
         if (holderTransform != null)
         {
             float xOffset = scanner.transform.position.x - holderTransform.position.x;
@@ -105,13 +102,15 @@ public class ScannerController : MonoBehaviour
 
         if (Physics.Raycast(origin, dir, out RaycastHit hit, scanRange, hitLayers))
         {
-            // Debug.DrawLine(origin, hit.point, Color.cyan, 2f);
              if (hitEffect != null)
                 Instantiate(hitEffect, hit.point, Quaternion.identity);
+
+            var enemy = hit.collider.GetComponent<EnemyController>();
+            if (enemy != null)
+            {
+                enemy.OnScanHit();
+            }
         }
-        else
-        {
-            // Debug.DrawLine(origin, origin + dir * scanRange, Color.cyan, 2f);
-        }
+       
     }
 }

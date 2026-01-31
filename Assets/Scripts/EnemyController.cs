@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+public ZoneController zoneController;
     void Start()
     {
         
@@ -12,5 +12,20 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         
+    }
+    public void OnScanHit()
+    {
+        Debug.Log("Enemy hit by scan laser!");
+        if (zoneController != null)
+        {
+            var currentZone = zoneController.getCurrentZone();
+            Debug.Log("Enemy was in zone: " + currentZone);
+      
+            if(currentZone > 0)
+            {
+                int newZone = Mathf.Max(0, currentZone - 1);
+                zoneController.setCurrentZone(newZone);
+            }
+        }
     }
 }

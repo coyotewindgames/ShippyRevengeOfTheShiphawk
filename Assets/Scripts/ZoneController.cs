@@ -60,4 +60,21 @@ public class ZoneController : MonoBehaviour
         spawnPos.y += 0.5f; 
         enemyPrefab.transform.position = spawnPos;
     }
+    
+    public int getCurrentZone()
+    {
+        if (zones.Length == 0)
+            return -1;
+
+        Transform zone = zones[currentIndex];
+        return currentIndex;
+    }
+    public void setCurrentZone(int index)
+    {
+        if (zones.Length == 0 || index < 0 || index >= zones.Length)
+            return;
+
+        currentIndex = index;
+        Transform zone = zones[currentIndex];
+    }
 }
