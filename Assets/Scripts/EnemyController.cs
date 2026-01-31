@@ -5,14 +5,34 @@ public class EnemyController : MonoBehaviour
     public ZoneController zoneController;
     [SerializeField] private Transform playerTransform; // Assign in inspector or find automatically
     private AudioSource audioSource;
-    private bool isGameOver = false;
+    private bool isChasingPlayer = false;
     private Animator animator;
     [SerializeField] private float runSpeed = 5f;
 
     void Start()
     {
+        Debug.Log("EnemyController Started - Script is running!");
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
+        
+        // Disable root motion so script controls movement
+        if (animator != null)
+            animator.applyRootMotion = false;
+
+        // Ensure Rigidbody exists and is Dynamic (Not Kinematic) for correct collision events
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+        
+        // IMPORTANT: Must be false to generate collision events while moving
+        rb.isKinematic = false; 
+        rb.useGravity = true; 
+        // Continuous detection prevents passing through objects at high speed
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+
         if (playerTransform == null)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -20,18 +40,36 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    // Use FixedUpdate for physics-based movement
+    void FixedUpdate()
     {
-        if (isGameOver && playerTransform != null)
+        if (isChasingPlayer && playerTransform != null)
         {
             Vector3 direction = (playerTransform.position - transform.position).normalized;
             direction.y = 0;
             
             if (direction != Vector3.zero)
             {
-                transform.rotation = Quaternion.LookRotation(direction);
-                transform.position += direction * runSpeed * Time.deltaTime;
+                Rigidbody rb = GetComponent<Rigidbody>();
+                Quaternion targetRot = Quaternion.LookRotation(direction);
+                
+                if (rb != null && !rb.isKinematic)
+                {
+                    // Use Velocity for dynamic (physical) movement
+                    Vector3 velocity = direction * runSpeed;
+                    
+                    // Unified fix: Use rb.velocity which works on all Unity versions
+                    velocity.y = rb.linearVelocity.y; 
+                    rb.linearVelocity = velocity;
+
+                    rb.MoveRotation(targetRot);
+                }
+                else
+                {
+                    // Fallback for kinematic/transform movement if setup changes
+                    transform.rotation = targetRot;
+                    transform.position += direction * runSpeed * Time.fixedDeltaTime;
+                }
             }
         }
     }
@@ -50,7 +88,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void TriggerGameOver()
+    public void EnterFinalChaseMode()
     {
         animator.SetBool("FinalZone", true);        
         if (playerTransform == null)
@@ -59,6 +97,11 @@ public class EnemyController : MonoBehaviour
             if (player != null) playerTransform = player.transform;
         }
         
-        isGameOver = true;
+        isChasingPlayer = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Enemy collided with: " + collision.gameObject.name);
     }
 }

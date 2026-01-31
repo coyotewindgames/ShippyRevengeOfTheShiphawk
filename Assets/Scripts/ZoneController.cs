@@ -61,7 +61,7 @@ public class ZoneController : MonoBehaviour
         {
             var enemy = enemyPrefab.GetComponent<EnemyController>();
             if (enemy != null)
-                enemy.TriggerGameOver();
+                enemy.EnterFinalChaseMode();
         }
     }
 

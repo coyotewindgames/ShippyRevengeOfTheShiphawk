@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     
     private bool isGrounded = true;
     private float targetYaw;
+
+    public ZoneController zoneController;
     
     public float WalkSpeed 
     { 
@@ -108,12 +110,61 @@ public class PlayerController : MonoBehaviour
         animationSystem?.SetMovementState(inputDirection.magnitude, isRunning);
     }
 
+    public void TriggerGameOver()
+    {
+        Debug.Log("GAME OVER TRIGGERED!");
+        this.enabled = false;
+        if(movementSystem != null) movementSystem.WalkSpeed = 0;
+        // Add UI or Scene Reload logic here
+        
+        // Example: Reload scene after delay?
+        // StartCoroutine(ReloadSceneRoutine());
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("PLAYER COL: OnCollisionEnter with: " + collision.gameObject.name);
+
         if (collision.gameObject.CompareTag("Ground"))
         {
             movementSystem.IsGrounded = true;
             animationSystem?.SetGrounded(true);
+        }
+        CheckEnemyCollision(collision.gameObject);
+    }
+
+    // Support CharacterController physics if the player uses that instead of Rigidbody
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log("PLAYER CC: Hit " + hit.gameObject.name);
+        CheckEnemyCollision(hit.gameObject);
+    }
+    
+    private void OnCollisionStay(Collision collision)
+    {
+        // Only check enemy collision on stay, don't log spam
+        if(collision.gameObject.CompareTag("Enemy"))
+            CheckEnemyCollision(collision.gameObject);
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        CheckEnemyCollision(other.gameObject);
+    }
+
+    private void CheckEnemyCollision(GameObject other)
+    {
+        Debug.Log("Checking collision with: " + other.name);
+        // Check if the object or its root has the Enemy tag
+        if(other.CompareTag("Enemy") || other.transform.root.CompareTag("Enemy"))
+        {
+            Debug.Log("Game Over! Player collided with enemy.");
+            TriggerGameOver();
+        }
+        else
+        {
+            // Debug what we are hitting to help troubleshoot
+            Debug.Log($"Player hit object: '{other.name}' with Tag: '{other.tag}' (Root Tag: '{other.transform.root.tag}')");
         }
     }
 

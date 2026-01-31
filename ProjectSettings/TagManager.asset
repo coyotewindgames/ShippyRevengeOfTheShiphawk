@@ -10,6 +10,7 @@ TagManager:
   - canPickUp
   - Scanner
   - ScanLaser
+  - Enemy
   layers:
   - Default
   - TransparentFX
