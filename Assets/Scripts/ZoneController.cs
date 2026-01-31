@@ -37,22 +37,34 @@ public class ZoneController : MonoBehaviour
             yield break;
 
         currentIndex = 0;
-        while (true)
+        while (currentIndex < zones.Length)
         {
             Transform zone = zones[currentIndex];
             SpawnAtZone(zone);
 
+            if (currentIndex == zones.Length - 1)
+            {
+                OnFinalZoneReached();
+                yield break;
+            }
+
             float delay = UnityEngine.Random.Range(minDelay, maxDelay);
             yield return new WaitForSeconds(delay);
-            currentIndex = (currentIndex + 1) % zones.Length;
+            currentIndex++;
+        }
+    }
 
-            if(currentIndex == zones.Length - 1)
-            {
-                Debug.Log("Completed all zones. Stopping Move.");
-                yield break;
-             }
+    private void OnFinalZoneReached()
+    {
+        Debug.Log("Completed all zones. Stopping Move.");
+        if (enemyPrefab != null)
+        {
+            var enemy = enemyPrefab.GetComponent<EnemyController>();
+            if (enemy != null)
+                enemy.TriggerGameOver();
+        }
     }
-    }
+
     void SpawnAtZone(Transform zone)
     {
         if (zone == null) return;
