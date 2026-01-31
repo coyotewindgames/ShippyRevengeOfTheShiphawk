@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Legacy wrapper for backward compatibility - Consider using GameManager instead
-public class AnimationController : MonoBehaviour
+public class Aim : MonoBehaviour
 {
     [Header("Animation System")]
     [SerializeField] private Animation animationSystem;

@@ -4,7 +4,7 @@ using UnityEngine.AdaptivePerformance;
 public class PickUpObject : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    bool isHolding = false;
+    public bool isHolding = false;
     [SerializeField] 
     float throwForce = 100f;
    [SerializeField] 
@@ -16,7 +16,7 @@ public class PickUpObject : MonoBehaviour
     TempParent tempParent;
     Rigidbody   rb;
     Collider objCollider;
-    Collider playerCollider;
+    Collider[] playerColliders;
     GameObject scannerObj;
     ScannerController scannerController;
 
@@ -27,7 +27,7 @@ public class PickUpObject : MonoBehaviour
         objCollider = GetComponent<Collider>();
         tempParent = TempParent.Instance;
         if (tempParent != null)
-            playerCollider = tempParent.GetComponentInParent<Collider>();
+            playerColliders = tempParent.GetComponentsInParent<Collider>();
 
         scannerObj = GameObject.FindGameObjectWithTag("Scanner");
         if (scannerObj != null)
@@ -53,8 +53,14 @@ public class PickUpObject : MonoBehaviour
         objectPos = transform.position;
         transform.SetParent(tempParent.transform);
 
-        if (playerCollider != null && objCollider != null)
-            Physics.IgnoreCollision(objCollider, playerCollider, true);
+        if (playerColliders != null && objCollider != null)
+        {
+            foreach (var col in playerColliders)
+            {
+                if (col != null)
+                    Physics.IgnoreCollision(objCollider, col, true);
+            }
+        }
 
         if (scannerObj != null && scannerObj == gameObject)
         {
@@ -88,6 +94,8 @@ public class PickUpObject : MonoBehaviour
         {
             Vector3 offsetWorld = tempParent.transform.TransformDirection(holdOffset);
             transform.position = tempParent.transform.position + offsetWorld;
+            Vector3 holderEuler = tempParent.transform.eulerAngles;
+            transform.rotation = Quaternion.Euler(0f, holderEuler.y, 0f);
         }
         }
     }   
@@ -101,8 +109,14 @@ public class PickUpObject : MonoBehaviour
         rb.detectCollisions = true;
         transform.SetParent(null);
 
-        if (playerCollider != null && objCollider != null)
-            Physics.IgnoreCollision(objCollider, playerCollider, false);
+        if (playerColliders != null && objCollider != null)
+        {
+            foreach (var col in playerColliders)
+            {
+                if (col != null)
+                    Physics.IgnoreCollision(objCollider, col, false);
+            }
+        }
     }
 
     private void Throw()

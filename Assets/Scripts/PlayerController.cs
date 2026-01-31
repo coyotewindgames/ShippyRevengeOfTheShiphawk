@@ -11,10 +11,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     
     [Header("Input")]
-    [SerializeField] private bool useMouseForHorizontal = true;
-    [SerializeField] private float mouseSensitivity = 1f;
+    [SerializeField] private bool useMouseForHorizontal = false;
+    [SerializeField] private float mouseSensitivity = 3f;
+    [SerializeField] private Transform cameraTransform;
+    private CameraController cameraController;
     
     private bool isGrounded = true;
+    private float targetYaw;
     
     public float WalkSpeed 
     { 
@@ -45,6 +48,16 @@ public class PlayerController : MonoBehaviour
     {
         if (rb == null)
             rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.constraints &= ~RigidbodyConstraints.FreezeRotationY;
+            rb.constraints |= RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        }
+
+        if (cameraTransform == null && Camera.main != null)
+            cameraTransform = Camera.main.transform;
+        if (cameraTransform != null)
+            cameraController = cameraTransform.GetComponent<CameraController>();
             
         if (animator == null)
             animator = GetComponent<Animator>();
@@ -57,6 +70,7 @@ public class PlayerController : MonoBehaviour
         movementSystem.Initialize(rb);
         animationSystem.Initialize(animator);
         isGrounded = true;
+        targetYaw = transform.eulerAngles.y;
         
     }
 
@@ -64,27 +78,33 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
     }
+
+    private void FixedUpdate()
+    {
+        if (rb != null)
+            rb.MoveRotation(Quaternion.Euler(0f, targetYaw, 0f));
+    }
     
   
     private void HandleMovement()
     {
-        float h;
-        if (useMouseForHorizontal)
-        {
-            float norm = (Input.mousePosition.x / (float)Screen.width - 0.5f) * 2f; // -1..1 across screen
-            h = Mathf.Clamp(norm * mouseSensitivity, -1f, 1f);
-        }
-        else
-        {
-            h = Input.GetAxis("Horizontal");
-        }
+        float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         Vector3 inputDirection = new Vector3(h, 0, v);
         
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
         
+        if (cameraTransform == null && Camera.main != null)
+        {
+            cameraTransform = Camera.main.transform;
+            cameraController = cameraTransform.GetComponent<CameraController>();
+        }
+
         movementSystem.HandleMovement(inputDirection, isRunning);
-        movementSystem.handlePlayerTurning(inputDirection);
+        if (cameraController != null)
+            targetYaw = cameraController.Yaw;
+        else
+            targetYaw += Input.GetAxis("Mouse X") * mouseSensitivity;
         animationSystem?.SetMovementState(inputDirection.magnitude, isRunning);
     }
 

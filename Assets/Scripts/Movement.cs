@@ -51,19 +51,15 @@ public class Movement
     public void HandleMovement(Vector3 inputDirection, bool isRunning)
     {
         float forwardInput = inputDirection.z;
-        
-        if (Mathf.Abs(forwardInput) > 0.1f)
-        {
-            float currentSpeed = isRunning ? runSpeed : walkSpeed;
-            Vector3 movement = rb.transform.forward * forwardInput * currentSpeed;
-            Vector3 newVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
-            rb.linearVelocity = newVelocity;
-        }
-        else
-        {
-            Vector3 newVelocity = new Vector3(0, rb.linearVelocity.y, 0);
-            rb.linearVelocity = newVelocity;
-        }
+        float horizontalInput = inputDirection.x;
+
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+        Vector3 move = rb.transform.forward * forwardInput + rb.transform.right * horizontalInput;
+        if (move.sqrMagnitude > 1f)
+            move.Normalize();
+
+        Vector3 newVelocity = new Vector3(move.x * currentSpeed, rb.linearVelocity.y, move.z * currentSpeed);
+        rb.linearVelocity = newVelocity;
     }
     public void handlePlayerTurning(Vector3 inputDirection)
     {
