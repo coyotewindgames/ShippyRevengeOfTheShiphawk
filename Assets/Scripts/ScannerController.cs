@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class ScannerController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private GameObject scanner;
     private Transform holderTransform;
     [Header("Scan Fire")]
@@ -14,7 +13,7 @@ public class ScannerController : MonoBehaviour
     [SerializeField] private float pickupForwardOffset = 0.5f;
     [SerializeField] private Camera scannerCamera;
     [Header("Aim Offset")]
-    [SerializeField] private float aimPitchOffset = 1f; // Adjust if scanner model is tilted
+    [SerializeField] private float aimPitchOffset = 1f; 
     [Header("Laser")]
     [SerializeField] private GameObject laserPrefab;
     [SerializeField] private float laserDuration = 0.1f;
@@ -27,6 +26,7 @@ public class ScannerController : MonoBehaviour
         scanner = GameObject.FindGameObjectWithTag("Scanner");
         if (scannerTip == null && scanner != null)
             scannerTip = scanner.transform;
+            scannerTip.transform.localPosition = new Vector3(scannerTip.transform.localPosition.x, scannerTip.transform.localPosition.y + 0.5f, scannerTip.transform.localPosition.z);
         if (scannerCamera == null && scanner != null)
             scannerCamera = scanner.GetComponentInChildren<Camera>();
         if (scanner != null)
@@ -38,7 +38,6 @@ public class ScannerController : MonoBehaviour
             holderTransform = tempParent.transform;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && pickUpObject != null && pickUpObject.isHolding)
@@ -49,7 +48,6 @@ public class ScannerController : MonoBehaviour
     {
         if (scanner == null) return;
         
-        // Reset rotation to 0,0,0 as requested
         scanner.transform.localRotation = Quaternion.identity;
 
         if (holderTransform != null)
@@ -69,11 +67,9 @@ public class ScannerController : MonoBehaviour
     {
         if (scannerTip == null && scannerCamera == null) return;
 
-        // Use scanner tip position (front of scanner) as origin, offset slightly forward
         Vector3 origin = scannerTip != null ? scannerTip.position : scannerCamera.transform.position;
         Vector3 dir;
 
-        // Use main camera's aim direction (toward crosshair) if available
         if (mainCameraController != null)
         {
             dir = mainCameraController.GetAimDirectionFrom(origin, scanRange, hitLayers);

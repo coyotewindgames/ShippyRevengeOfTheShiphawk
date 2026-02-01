@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.67229, y: 0.39645, z: 0.071124725}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4583295970655088}
@@ -100,6 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4111050744712046}
   - component: {fileID: 108171471724405716}
+  - component: {fileID: 3080639235981286391}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -187,6 +188,35 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &3080639235981286391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515787200994300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1 &1541144973880462
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,7 +277,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.2822291, y: 0.9478, z: -0.038717676, w: 0.14325818}
   m_LocalPosition: {x: -2.1692662, y: 0.57925177, z: 6.1079197}
-  m_LocalScale: {x: 0.5735887, y: 0.5735887, z: 0.5735887}
+  m_LocalScale: {x: 0.5735887, y: 0.5735887, z: 0.15933147}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4111050744712046}
@@ -313,7 +343,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.0000001937151, y: -0.7071068, z: -0.00000017881393, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 0.07953, z: 2}
+  m_LocalScale: {x: 0.7430975, y: 0.026167735, z: 0.30812517}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4583295970655088}
@@ -402,7 +432,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.55421, y: 0.26194, z: 0.15536}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4978161942431402}

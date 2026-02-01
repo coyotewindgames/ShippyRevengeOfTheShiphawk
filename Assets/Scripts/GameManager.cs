@@ -16,10 +16,12 @@ public class GameManager : MonoBehaviour
     
     public GameSettings Settings { get { return gameSettings; } }
     public PlayerController Player { get { return playerController; } }
+
+     public bool gameOver { get; private set; } = false;    
     
     private void Awake()
     {
-        // Singleton pattern
+
         if (Instance == null)
         {
             Instance = this;
@@ -45,6 +47,7 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
+
         ApplySettingsToPlayer();
     }
     
@@ -101,6 +104,12 @@ public class GameManager : MonoBehaviour
         if (playerController != null)
             playerController.JumpForce = force;
     }
+
+    public void SetGameOver(bool isGameOver)
+    {
+        Debug.Log("GameManager: Setting gameOver to " + isGameOver);
+        gameOver = isGameOver;
+    }
     
     public void SetMasterVolume(float volume)
     {
@@ -139,9 +148,6 @@ public class GameManager : MonoBehaviour
     }
 }
 
-/// <summary>
-/// Serializable class to hold game settings
-/// </summary>
 [System.Serializable]
 public class GameSettings
 {

@@ -10,7 +10,6 @@ public class TempParent : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -18,5 +17,4 @@ public class TempParent : MonoBehaviour
         }
     }
 
-   
 }

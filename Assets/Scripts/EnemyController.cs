@@ -11,14 +11,10 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("EnemyController Started - Script is running!");
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         
-        // Disable root motion so script controls movement
-        if (animator != null)
-            animator.applyRootMotion = false;
-
+      
         // Ensure Rigidbody exists and is Dynamic (Not Kinematic) for correct collision events
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb == null)
@@ -98,10 +94,5 @@ public class EnemyController : MonoBehaviour
         }
         
         isChasingPlayer = true;
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Enemy collided with: " + collision.gameObject.name);
     }
 }

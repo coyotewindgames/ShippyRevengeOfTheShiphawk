@@ -32,6 +32,14 @@ public class Animation
             animator.SetFloat("running", 0f);
         }
     }
+
+    public void setDeathAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("death");
+        }
+    }
     
     
     public void SetGrounded(bool grounded)

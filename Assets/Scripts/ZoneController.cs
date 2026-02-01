@@ -18,24 +18,27 @@ public class ZoneController : MonoBehaviour
     [Tooltip("Maximum delay between spawns (seconds)")]
     public float maxDelay = 7f;
 
+    public static GameManager Instance;
+
     int currentIndex = 0;
+
+    private PlayerController playerController;
 
     void Start()
     {
         if (zones.Length == 0)
         {
-                List<Transform> children = new List<Transform>();
-                foreach (Transform t in transform) children.Add(t);
-                zones = children.ToArray();
+            List<Transform> children = new List<Transform>();
+            foreach (Transform t in transform) children.Add(t);
+            zones = children.ToArray();
         }
+        playerController = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
         StartCoroutine(ProgressZone());
+        Instance = GameManager.Instance;
     }
 
     IEnumerator ProgressZone()
     {
-        if (zones.Length == 0 || enemyPrefab == null)
-            yield break;
-
         currentIndex = 0;
         while (currentIndex < zones.Length)
         {
@@ -56,23 +59,23 @@ public class ZoneController : MonoBehaviour
 
     private void OnFinalZoneReached()
     {
-        Debug.Log("Completed all zones. Stopping Move.");
         if (enemyPrefab != null)
         {
             var enemy = enemyPrefab.GetComponent<EnemyController>();
             if (enemy != null)
                 enemy.EnterFinalChaseMode();
+
         }
     }
 
     void SpawnAtZone(Transform zone)
     {
         if (zone == null) return;
-        var spawnPos = new Vector3(zone.position.x, zone.position.y, UnityEngine.Random.Range(zone.position.z - 30f, zone.position.z -1f)   );
-        spawnPos.y += 0.5f; 
+        var spawnPos = new Vector3(zone.position.x, zone.position.y, UnityEngine.Random.Range(zone.position.z - 30f, zone.position.z - 1f));
+        spawnPos.y += 0.5f;
         enemyPrefab.transform.position = spawnPos;
     }
-    
+
     public int getCurrentZone()
     {
         if (zones.Length == 0)

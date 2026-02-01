@@ -17,10 +17,4 @@ public class AnimationController : MonoBehaviour
         animationSystem.Initialize(animator);
     }
     
-    // Public methods for external access
-    public void SetMovementState(float movementMagnitude, bool isRunning)
-    {
-        animationSystem?.SetMovementState(movementMagnitude, isRunning);
-    }
-    
 }
