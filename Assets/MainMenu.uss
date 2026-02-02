@@ -1,0 +1,214 @@
+/* Main Menu USS Stylesheet */
+/* Color Palette:
+   olive-bark: #665638
+   copper: #B97542
+   dusk-blue: #325575
+   pale-oak: #C5B8AB
+   pearl-beige: #F1E4B9
+*/
+
+/* Root container */
+.main-menu-container {
+    flex-grow: 1;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-left: 60px;
+    padding-top: 40px;
+}
+
+/* Title styling */
+.title-label {
+    font-size: 72px;
+    color: #F1E4B9; /* pearl-beige */
+    -unity-font-style: bold-and-italic;
+    margin-bottom: 40px;
+    -unity-text-outline-width: 2px;
+    -unity-text-outline-color: #665638; /* olive-bark */
+    opacity: 1;
+    transition-duration: 0.75s;
+    transition-property: opacity, color;
+}
+
+/* Title fading state for transition */
+.title-label.title-fading {
+    opacity: 0;
+}
+
+/* Button container */
+.button-container {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+/* Base button styling - dusk-blue with transparency */
+.menu-button {
+    width: 260px;
+    height: 55px;
+    margin: 8px 0;
+    padding: 10px 20px;
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: #F1E4B9; /* pearl-beige */
+    background-color: rgba(50, 85, 117, 0.75); /* dusk-blue with transparency */
+    border-width: 2px;
+    border-color: rgba(241, 228, 185, 0.5); /* pearl-beige transparent */
+    border-radius: 8px;
+    transition-duration: 0.15s;
+}
+
+/* Button hover state */
+.menu-button:hover {
+    background-color: rgba(50, 85, 117, 0.9); /* dusk-blue less transparent */
+    border-color: #F1E4B9; /* pearl-beige solid */
+    scale: 1.03;
+}
+
+/* Button active/pressed state */
+.menu-button:active {
+    background-color: rgba(102, 86, 56, 0.85); /* olive-bark */
+    color: #F1E4B9; /* pearl-beige */
+    scale: 0.98;
+}
+
+/* All buttons share the same blue style now */
+.start-button {
+}
+
+.start-button:hover {
+}
+
+.start-button:active {
+}
+
+.settings-button {
+}
+
+.settings-button:hover {
+}
+
+.settings-button:active {
+}
+
+.quit-button {
+}
+
+.quit-button:hover {
+}
+
+.quit-button:active {
+}
+
+/* ========== SETTINGS PANEL ========== */
+
+.settings-panel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    width: 320px;
+    padding: 20px;
+    background-color: rgba(50, 85, 117, 0.92); /* dusk-blue */
+    border-width: 2px;
+    border-color: rgba(241, 228, 185, 0.6); /* pearl-beige */
+    border-radius: 12px;
+    transition-duration: 0.2s;
+}
+
+.settings-panel.hidden {
+    display: none;
+}
+
+.settings-title {
+    font-size: 28px;
+    color: #F1E4B9; /* pearl-beige */
+    -unity-font-style: bold;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(241, 228, 185, 0.4);
+}
+
+.settings-section-label {
+    font-size: 18px;
+    color: #B97542; /* copper */
+    -unity-font-style: bold;
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+.setting-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 0;
+    height: 30px;
+}
+
+.setting-label {
+    font-size: 14px;
+    color: #C5B8AB; /* pale-oak */
+    width: 100px;
+    -unity-text-align: middle-left;
+}
+
+.setting-slider {
+    flex-grow: 1;
+    margin: 0 8px;
+    min-width: 120px;
+}
+
+.setting-slider > .unity-base-slider__dragger {
+    background-color: #B97542; /* copper */
+    border-radius: 6px;
+}
+
+.setting-slider > .unity-base-slider__tracker {
+    background-color: rgba(197, 184, 171, 0.4); /* pale-oak */
+    border-radius: 4px;
+}
+
+.setting-value {
+    font-size: 14px;
+    color: #F1E4B9; /* pearl-beige */
+    width: 45px;
+    -unity-text-align: middle-right;
+}
+
+.setting-toggle {
+    margin-left: auto;
+}
+
+.setting-toggle > .unity-toggle__checkmark {
+    background-color: rgba(197, 184, 171, 0.5); /* pale-oak */
+    border-color: #B97542; /* copper */
+    border-width: 2px;
+    border-radius: 4px;
+}
+
+.setting-toggle:checked > .unity-toggle__checkmark {
+    background-color: #B97542; /* copper */
+}
+
+.close-button {
+    margin-top: 16px;
+    width: 100%;
+    height: 40px;
+}
+
+/* ========== HORROR TRANSITION STYLES ========== */
+
+.horror-button {
+    background-color: rgba(100, 20, 20, 0.85); /* dark blood red */
+    border-color: rgba(150, 30, 30, 0.8);
+    color: #F1E4B9;
+    transition-duration: 1s;
+}
+
+.horror-button:hover {
+    background-color: rgba(130, 25, 25, 0.95); /* slightly brighter blood red */
+    border-color: rgba(180, 40, 40, 0.9);
+}
+
+.horror-button:active {
+    background-color: rgba(80, 15, 15, 0.95); /* darker blood red */
+}

@@ -11,6 +11,8 @@ TagManager:
   - Scanner
   - ScanLaser
   - Enemy
+  - HorrorCanvas
+  - PeacefulCanvas
   layers:
   - Default
   - TransparentFX
