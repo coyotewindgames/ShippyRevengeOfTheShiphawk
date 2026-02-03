@@ -13,16 +13,18 @@ public class ZoneController : MonoBehaviour
     public GameObject enemyPrefab;
 
     [Tooltip("Minimum delay between spawns (seconds)")]
-    public float minDelay = 5f;
+    public float minDelay = 2f;
 
     [Tooltip("Maximum delay between spawns (seconds)")]
-    public float maxDelay = 7f;
+    public float maxDelay = 4f;
 
     public static GameManager Instance;
 
     int currentIndex = 0;
 
     private PlayerController playerController;
+
+    private AudioSource audioSource;
 
     void Start()
     {
@@ -33,6 +35,7 @@ public class ZoneController : MonoBehaviour
             zones = children.ToArray();
         }
         playerController = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
+        audioSource = GetComponent<AudioSource>();
         StartCoroutine(ProgressZone());
         Instance = GameManager.Instance;
     }
@@ -44,6 +47,7 @@ public class ZoneController : MonoBehaviour
         {
             Transform zone = zones[currentIndex];
             SpawnAtZone(zone);
+            
 
             if (currentIndex == zones.Length - 1)
             {
@@ -54,6 +58,7 @@ public class ZoneController : MonoBehaviour
             float delay = UnityEngine.Random.Range(minDelay, maxDelay);
             yield return new WaitForSeconds(delay);
             currentIndex++;
+            audioSource?.Play();
         }
     }
 
@@ -71,7 +76,7 @@ public class ZoneController : MonoBehaviour
     void SpawnAtZone(Transform zone)
     {
         if (zone == null) return;
-        var spawnPos = new Vector3(zone.position.x, zone.position.y, UnityEngine.Random.Range(zone.position.z - 30f, zone.position.z - 1f));
+        var spawnPos = new Vector3(zone.position.x, zone.position.y, UnityEngine.Random.Range(zone.position.z - 30f, zone.position.z - 10f));
         spawnPos.y += 0.5f;
         enemyPrefab.transform.position = spawnPos;
     }

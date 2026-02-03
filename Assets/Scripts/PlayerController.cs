@@ -16,9 +16,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     private CameraController cameraController;
 
+    [Header("Audio")]
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip walkClip;
+    [SerializeField] private AudioClip deathClip;
+    [SerializeField] private float stepInterval = 0.5f;
+    [SerializeField] private float runStepInterval = 0.3f;
+    private float stepTimer;
+
     private GameManager gameManager;
 
     private bool isGrounded = true;
+    private bool isDead = false;
     private float targetYaw;
 
     public float WalkSpeed
@@ -65,7 +74,11 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = true;
         targetYaw = transform.eulerAngles.y;
-
+        
+        // Setup audio - create a dedicated SFX source (don't touch existing ambient sources)
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 1f; // 3D sound
     }
 
     private void Update()
@@ -95,6 +108,22 @@ public class PlayerController : MonoBehaviour
         }
 
         movementSystem.HandleMovement(inputDirection, isRunning);
+
+        // Footstep Audio Logic
+        if (inputDirection.sqrMagnitude > 0.01f && !isDead)
+        {
+            stepTimer -= Time.deltaTime;
+            if (stepTimer <= 0f)
+            {
+                PlayFootstep(isRunning);
+                stepTimer = isRunning ? runStepInterval : stepInterval;
+            }
+        }
+        else
+        {
+            stepTimer = 0.05f; // Ready to play shortly after starting movement
+        }
+
         if (cameraController != null)
             targetYaw = cameraController.Yaw;
         else
@@ -104,12 +133,60 @@ public class PlayerController : MonoBehaviour
 
     public void TriggerGameOver()
     {
-        this.enabled = false;
+        if (isDead) return; // Prevent multiple calls
+        isDead = true;
+        
+        animationSystem?.setDeathAnimation();
         if (movementSystem != null) movementSystem.WalkSpeed = 0;
-        GameManager.Instance.SetGameOver(true);
+        
+        StartCoroutine(SinkPlayer(2f, 5f)); 
+        
+        if (GameManager.Instance != null)
+            GameManager.Instance.SetGameOver(true);
+        else
+            Debug.LogWarning("TriggerGameOver: GameManager.Instance is null!");
+    }
+    
+    // Play a one-shot sound (can overlap)
+    public void PlaySound(AudioClip clip, float volume = 1f)
+    {
+        if (clip != null && audioSource != null)
+            audioSource.PlayOneShot(clip, volume);
+    }
+    
+    public void PlayFootstep(bool isRunning = false)
+    {
+        AudioClip clip = walkClip;;
+        if (clip != null)
+            PlaySound(clip, 0.5f);
+    }
+    
+    private System.Collections.IEnumerator SinkPlayer(float duration, float sinkAmount)
+    {
+        // Disable physics so we control position
+        PlaySound(deathClip);
 
-        // Example: Reload scene after delay?
-        // StartCoroutine(ReloadSceneRoutine());
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+        
+        Vector3 startPos = transform.position;
+        Vector3 endPos = new Vector3(startPos.x, startPos.y - sinkAmount, startPos.z);
+        float elapsed = 0f;
+        
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+        
+        transform.position = endPos;
+
+        this.enabled = false;
     }
 
     private void OnCollisionEnter(Collision collision)

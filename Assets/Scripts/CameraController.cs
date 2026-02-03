@@ -91,22 +91,6 @@ public class CameraController : MonoBehaviour
         return angle;
     }
 
-    private void Aiming()
-    {
-        if (Camera.main == null) return;
-
-        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            Debug.DrawLine(ray.origin, hit.point, Color.green);
-            mouse = hit.point;
-        }
-        directionTarget = mouse - transform.position;
-        lookRotation = Quaternion.LookRotation(directionTarget.normalized, Vector3.up);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
-    
-    }
 
     private void OnGUI()
     {

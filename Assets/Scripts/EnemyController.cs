@@ -95,4 +95,14 @@ public class EnemyController : MonoBehaviour
         
         isChasingPlayer = true;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isChasingPlayer = false;
+        animator.SetBool("FinalZone", false);        
+        }
+    }
 }

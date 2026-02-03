@@ -9,13 +9,12 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     [SerializeField] private GameSettings gameSettings;
     
-    [Header("Player Reference")]
     [SerializeField] private PlayerController playerController;
     
     public static GameManager Instance { get; private set; }
     
     public GameSettings Settings { get { return gameSettings; } }
-    public PlayerController Player { get { return playerController; } }
+    private PlayerController Player { get { return playerController; } }
 
      public bool gameOver { get; private set; } = false;    
     
