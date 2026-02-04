@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Scene Flow")]
     [SerializeField] private SceneFader sceneFader;
-    [SerializeField] private string gameOverSceneName = "GameOver";
+    [SerializeField] private string gameOverSceneName = "GameOverScene";
+    [SerializeField] private int gameOverSceneBuildIndex = -1;
     
     public static GameManager Instance { get; set; }
     
@@ -110,11 +111,25 @@ public class GameManager : MonoBehaviour
         gameOver = isGameOver;
         if (isGameOver)
         {
-            if (sceneFader != null)
-                sceneFader.FadeToScene(gameOverSceneName);
-            else
-                UnityEngine.SceneManagement.SceneManager.LoadScene(gameOverSceneName);
+            string targetScene = ResolveGameOverSceneName();
+                
+            if (!string.IsNullOrWhiteSpace(targetScene))
+            {
+                sceneFader?.FadeToScene(targetScene);
+            }    
         }
+    }
+
+    private string ResolveGameOverSceneName()
+    {
+        if (gameOverSceneBuildIndex >= 0 && gameOverSceneBuildIndex < UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings)
+        {
+            string scenePath = UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(gameOverSceneBuildIndex);
+            if (!string.IsNullOrWhiteSpace(scenePath))
+                return System.IO.Path.GetFileNameWithoutExtension(scenePath);
+        }
+
+        return gameOverSceneName;
     }
     
     public void SetMasterVolume(float volume)
@@ -123,15 +138,17 @@ public class GameManager : MonoBehaviour
         AudioListener.volume = gameSettings.masterVolume;
     }
     
-    public void PauseGame()
-    {
-        Time.timeScale = 0f;
-    }
+
+    // gonna implement these later
+    // public void PauseGame()
+    // {
+    //     Time.timeScale = 0f;
+    // }
     
-    public void ResumeGame()
-    {
-        Time.timeScale = 1f;
-    }
+    // public void ResumeGame()
+    // {
+    //     Time.timeScale = 1f;
+    // }
     
     public void RestartLevel()
     {

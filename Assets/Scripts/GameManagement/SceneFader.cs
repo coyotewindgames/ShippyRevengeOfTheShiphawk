@@ -11,7 +11,7 @@ public class SceneFader : MonoBehaviour
     [Header("Auto Transition (Optional)")]
     [SerializeField] private bool autoTransition = false;
     [SerializeField] private float waitSeconds = 2f;
-    [SerializeField] private string nextSceneName = "IntroScene";
+    [SerializeField] private string nextSceneName;
     [SerializeField] private int nextSceneBuildIndex = -1;
 
     private void Awake()
@@ -25,6 +25,7 @@ public class SceneFader : MonoBehaviour
 
     private void Start()
     {
+        if(!autoTransition) return;
         if (canvasGroup != null)
             StartCoroutine(StartupRoutine());
     }

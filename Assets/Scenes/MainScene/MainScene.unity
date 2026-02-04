@@ -642,7 +642,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 84
+  Priority: 190
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -1409,6 +1409,56 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8135338645434844109, guid: 5508c5a466eaf224a9c3b3b9b923c79c, type: 3}
   m_PrefabInstance: {fileID: 196002380}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &231812729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 231812731}
+  - component: {fileID: 231812730}
+  m_Layer: 0
+  m_Name: SceneFader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &231812730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231812729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56f2c0c0a7b10db41ad398f84f700c81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneFader
+  canvasGroup: {fileID: 266518094}
+  fadeDuration: 1.5
+  autoTransition: 0
+  waitSeconds: 3.5
+  nextSceneName: GameOverScene
+  nextSceneBuildIndex: -1
+--- !u!4 &231812731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231812729}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -123.05565, y: 0, z: -10.56255}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &249182570
 GameObject:
   m_ObjectHideFlags: 0
@@ -1513,6 +1563,7 @@ GameObject:
   - component: {fileID: 266518093}
   - component: {fileID: 266518092}
   - component: {fileID: 266518091}
+  - component: {fileID: 266518094}
   m_Layer: 0
   m_Name: Kevins Station
   m_TagString: Untagged
@@ -1684,6 +1735,18 @@ RectTransform:
   m_AnchoredPosition: {x: -176.46909, y: 8.194}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &266518094
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266518090}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &283748742
 GameObject:
   m_ObjectHideFlags: 0
@@ -3907,15 +3970,15 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: e13dc72f28b901448ac825bf3b807b4b, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.456
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 3.21
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
@@ -3952,7 +4015,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.183
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3967,7 +4030,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.3638889
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3982,7 +4045,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.509
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -4784,8 +4847,9 @@ MonoBehaviour:
     enableVSync: 1
     targetFrameRate: 60
   playerController: {fileID: 0}
-  sceneFader: {fileID: 0}
-  gameOverSceneName: GameOver
+  sceneFader: {fileID: 231812730}
+  gameOverSceneName: GameOverScene
+  gameOverSceneBuildIndex: 3
 --- !u!4 &2028104897
 Transform:
   m_ObjectHideFlags: 0
@@ -5399,3 +5463,4 @@ SceneRoots:
   - {fileID: 725135468}
   - {fileID: 2028104897}
   - {fileID: 1646594949}
+  - {fileID: 231812731}

@@ -73,7 +73,7 @@ public class ScannerController : MonoBehaviour
         if (mainCameraController != null)
         {
             dir = mainCameraController.GetAimDirectionFrom(origin, scanRange, hitLayers);
-            // Apply pitch offset if scanner model causes aim to be off
+            // my scanner was made slightly crooked add an offset to make the aim look more accurate
             if (Mathf.Abs(aimPitchOffset) > 0.01f)
             {
                 Quaternion pitchAdjust = Quaternion.AngleAxis(aimPitchOffset, Vector3.Cross(Vector3.up, dir));
