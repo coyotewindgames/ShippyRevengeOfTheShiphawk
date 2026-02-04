@@ -3,6 +3,8 @@ using UnityEngine.AdaptivePerformance;
 
 public class PickUpObject : MonoBehaviour
 {
+    private static PickUpObject currentHeld;
+
     public bool isHolding = false;
     [SerializeField]
     float throwForce = 100f;
@@ -44,8 +46,10 @@ public class PickUpObject : MonoBehaviour
     private void OnMouseDown()
     {
         if (tempParent == null) return;
+        if (currentHeld != null && currentHeld != this) return;
 
         isHolding = true;
+        currentHeld = this;
         rb.isKinematic = true;
         rb.useGravity = false;
         rb.detectCollisions = false;
@@ -58,7 +62,8 @@ public class PickUpObject : MonoBehaviour
                 Physics.IgnoreCollision(objCollider, col, true);
         }
 
-        scannerController.OnScannerPickedUp();
+        if (CompareTag("Scanner"))
+            scannerController.OnScannerPickedUp();
 
     }
     private void OnMouseUp()
@@ -89,6 +94,8 @@ public class PickUpObject : MonoBehaviour
     {
         if (!isHolding) return;
         isHolding = false;
+        if (currentHeld == this)
+            currentHeld = null;
         rb.isKinematic = false;
         rb.useGravity = true;
         rb.detectCollisions = true;
