@@ -98,9 +98,6 @@ public class ScannerController : MonoBehaviour
 
         if (Physics.Raycast(origin, dir, out RaycastHit hit, scanRange, hitLayers))
         {
-             if (hitEffect != null)
-                Instantiate(hitEffect, hit.point, Quaternion.identity);
-
             var enemy = hit.collider.GetComponent<EnemyController>();
             if (enemy != null)
             {
