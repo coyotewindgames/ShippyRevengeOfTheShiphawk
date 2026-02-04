@@ -1245,7 +1245,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   zoneController: {fileID: 1608772343}
   playerTransform: {fileID: 50790626}
-  runSpeed: 15
+  hitClip: {fileID: 8300000, guid: 0abf183a771815e4b9dcadbd6c274cb9, type: 3}
+  runSpeed: 20
 --- !u!82 &194787249
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2756,7 +2757,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 30457fad9b1e34b41b044d4c0ba800d7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -189.53
+      value: -192.54
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 30457fad9b1e34b41b044d4c0ba800d7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2764,7 +2765,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 30457fad9b1e34b41b044d4c0ba800d7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.22
+      value: 5.99
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 30457fad9b1e34b41b044d4c0ba800d7, type: 3}
       propertyPath: m_LocalRotation.w

@@ -5,6 +5,7 @@ public class EnemyController : MonoBehaviour
     public ZoneController  zoneController;
     [SerializeField] private Transform playerTransform; // Assign in inspector or find automatically
     private AudioSource audioSource;
+    [SerializeField] private AudioClip hitClip;
     private bool isChasingPlayer = false;
     private Animator animator;
     [SerializeField] private float runSpeed = 5f;
@@ -101,6 +102,7 @@ public class EnemyController : MonoBehaviour
         {
             isChasingPlayer = false;
         animator.SetBool("FinalZone", false);        
+            audioSource.PlayOneShot(hitClip);
         }
     }
 }
