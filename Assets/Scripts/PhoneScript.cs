@@ -21,7 +21,6 @@ public class PhoneScript : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (phoneLight == null) phoneLight = GetComponentInChildren<Light>();
         
-        // Ensure light starts off
         if (phoneLight != null) phoneLight.intensity = 0f;
     }
 
@@ -48,10 +47,7 @@ public class PhoneScript : MonoBehaviour
 
     void HandleLightPulse()
     {
-        if (!isAnswered && phoneLight != null)
-        {
-            phoneLight.intensity = Mathf.PingPong(Time.time * pulseSpeed, maxIntensity);
-        }
+            phoneLight.intensity = Mathf.PingPong(Time.time * pulseSpeed, maxIntensity);   
     }
 
     private void OnMouseDown()
@@ -68,10 +64,9 @@ public class PhoneScript : MonoBehaviour
         audioSource.Stop();
         audioSource.PlayOneShot(answerClick);
         audioSource.PlayOneShot(dialogueClip);
-        if (phoneLight != null) 
-        {
+     
             phoneLight.intensity = 0f;
-            phoneLight.enabled = false; // Stop light when answered
-        }
+            phoneLight.enabled = false; 
+        
     }
 }

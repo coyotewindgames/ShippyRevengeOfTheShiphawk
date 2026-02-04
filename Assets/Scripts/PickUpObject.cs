@@ -3,27 +3,26 @@ using UnityEngine.AdaptivePerformance;
 
 public class PickUpObject : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public bool isHolding = false;
-    [SerializeField] 
+    [SerializeField]
     float throwForce = 100f;
-   [SerializeField] 
+    [SerializeField]
     float maxDistance = 3.0f;
     [SerializeField]
     Vector3 holdOffset = new Vector3(0f, 0f, 2f);
     float distance;
 
     TempParent tempParent;
-    Rigidbody   rb;
+    Rigidbody rb;
     Collider objCollider;
     Collider[] playerColliders;
     GameObject scannerObj;
     ScannerController scannerController;
 
     Vector3 objectPos;
-   void Start()
+    void Start()
     {
-        rb= GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         objCollider = GetComponent<Collider>();
         tempParent = TempParent.Instance;
         if (tempParent != null)
@@ -53,51 +52,38 @@ public class PickUpObject : MonoBehaviour
         objectPos = transform.position;
         transform.SetParent(tempParent.transform);
 
-        if (playerColliders != null && objCollider != null)
+        foreach (var col in playerColliders)
         {
-            foreach (var col in playerColliders)
-            {
-                if (col != null)
-                    Physics.IgnoreCollision(objCollider, col, true);
-            }
+            if (col != null)
+                Physics.IgnoreCollision(objCollider, col, true);
         }
 
-        if (scannerObj != null && scannerObj == gameObject)
-        {
-            if (scannerController != null)
-                scannerController.OnScannerPickedUp();
-            else
-            {
-                Vector3 euler = transform.eulerAngles;
-                transform.eulerAngles = new Vector3(euler.x, euler.y, 0f);
-            }
-        }
+        scannerController.OnScannerPickedUp();
+
     }
     private void OnMouseUp()
     {
         Drop();
     }
-    private void OnMouseExit()
-    {
-        
-    }
+  
     private void Hold()
     {
         distance = Vector3.Distance(this.transform.position, tempParent.transform.position);
-        if (distance <= maxDistance) {
-        
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        if (Input.GetMouseButtonDown(1))
-            Throw();
-        else
+        if (distance <= maxDistance)
         {
-            Vector3 offsetWorld = tempParent.transform.TransformDirection(holdOffset);
-            transform.position = tempParent.transform.position + offsetWorld;
-            transform.localRotation = Quaternion.identity;
+
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            if (Input.GetMouseButtonDown(1))
+                Throw();
+            else
+            {
+                Vector3 offsetWorld = tempParent.transform.TransformDirection(holdOffset);
+                transform.position = tempParent.transform.position + offsetWorld;
+                transform.localRotation = Quaternion.identity;
+            }
         }
-        }
-    }   
+    }
 
     private void Drop()
     {
@@ -108,20 +94,16 @@ public class PickUpObject : MonoBehaviour
         rb.detectCollisions = true;
         transform.SetParent(null);
 
-        if (playerColliders != null && objCollider != null)
-        {
             foreach (var col in playerColliders)
             {
                 if (col != null)
                     Physics.IgnoreCollision(objCollider, col, false);
             }
-        }
     }
 
     private void Throw()
     {
         Drop();
-        if (tempParent != null)
-            rb.AddForce(tempParent.transform.forward * throwForce, ForceMode.Impulse);
+        rb.AddForce(tempParent.transform.forward * throwForce, ForceMode.Impulse);
     }
 }

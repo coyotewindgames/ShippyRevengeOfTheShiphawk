@@ -14,32 +14,32 @@ public class Movement
     
     public float WalkSpeed 
     { 
-        get { return walkSpeed; } 
-        set { walkSpeed = Mathf.Max(0, value); } 
+        get => walkSpeed;
+        set => walkSpeed = Mathf.Max(0, value);
     }
     
     public float RunSpeed 
     { 
-        get { return runSpeed; } 
-        set { runSpeed = Mathf.Max(0, value); } 
+        get => runSpeed;
+        set => runSpeed = Mathf.Max(0, value);
     }
     
     public float JumpForce 
     { 
-        get { return jumpForce; } 
-        set { jumpForce = Mathf.Max(0, value); } 
+        get => jumpForce;
+        set => jumpForce = Mathf.Max(0, value);
     }
     
     public float RotationSpeed 
     { 
-        get { return rotationSpeed; } 
-        set { rotationSpeed = Mathf.Max(0, value); } 
+        get => rotationSpeed;
+        set => rotationSpeed = Mathf.Max(0, value);
     }
     
     public bool IsGrounded 
     { 
-        get { return isGrounded; } 
-        set { isGrounded = value; } 
+        get  => isGrounded;
+        set => isGrounded = value; 
     }
     
     public void Initialize(Rigidbody rigidbody)

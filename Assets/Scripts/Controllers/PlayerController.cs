@@ -32,25 +32,25 @@ public class PlayerController : MonoBehaviour
 
     public float WalkSpeed
     {
-        get { return movementSystem?.WalkSpeed ?? 15f; }
+        get => movementSystem?.WalkSpeed ?? 15f;
         set { if (movementSystem != null) movementSystem.WalkSpeed = value; }
     }
 
     public float RunSpeed
     {
-        get { return movementSystem?.RunSpeed ?? 37.5f; }
+        get => movementSystem?.RunSpeed ?? 37.5f;
         set { if (movementSystem != null) movementSystem.RunSpeed = value; }
     }
 
     public float JumpForce
     {
-        get { return movementSystem?.JumpForce ?? 5f; }
+        get => movementSystem?.JumpForce ?? 5f;
         set { if (movementSystem != null) movementSystem.JumpForce = value; }
     }
 
     public float RotationSpeed
     {
-        get { return movementSystem?.RotationSpeed ?? 5f; }
+        get => movementSystem?.RotationSpeed ?? 5f;
         set { if (movementSystem != null) movementSystem.RotationSpeed = value; }
     }
 
