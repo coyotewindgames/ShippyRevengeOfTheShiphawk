@@ -1,11 +1,6 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-/// <summary>
-/// Manages game-wide state, settings, save/load, and coordinates between different game systems
-/// This should be a persistent singleton that manages the overall game flow
-/// </summary>
+
 public class GameManager : MonoBehaviour
 {
     [Header("Game Settings")]
@@ -59,7 +54,6 @@ public class GameManager : MonoBehaviour
     
     private void LoadGameSettings()
     {
-        // Load settings from PlayerPrefs or save file
         gameSettings.walkSpeed = PlayerPrefs.GetFloat("WalkSpeed", 15f);
         gameSettings.runSpeed = PlayerPrefs.GetFloat("RunSpeed", 37.5f);
         gameSettings.jumpForce = PlayerPrefs.GetFloat("JumpForce", 5f);
@@ -70,7 +64,6 @@ public class GameManager : MonoBehaviour
     
     public void SaveGameSettings()
     {
-        // Save settings to PlayerPrefs or save file
         PlayerPrefs.SetFloat("WalkSpeed", gameSettings.walkSpeed);
         PlayerPrefs.SetFloat("RunSpeed", gameSettings.runSpeed);
         PlayerPrefs.SetFloat("JumpForce", gameSettings.jumpForce);
@@ -130,7 +123,6 @@ public class GameManager : MonoBehaviour
         AudioListener.volume = gameSettings.masterVolume;
     }
     
-    // Game flow methods
     public void PauseGame()
     {
         Time.timeScale = 0f;
