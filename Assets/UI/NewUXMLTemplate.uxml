@@ -1,13 +1,13 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/MainMenu.uss?fileID=7433441132597879392&amp;guid=9fef4aaf375bd8f41ba530c1ed32725a&amp;type=3#MainMenu"/>
-    <ui:VisualElement class="main-menu-container">
+    <ui:VisualElement name="VisualElement" class="main-menu-container">
         <ui:Label text="Kevins Wonderful Day" class="title-label"/>
         <ui:VisualElement class="button-container">
             <ui:Button text="Start Game" name="start-button" class="menu-button start-button"/>
             <ui:Button text="Settings" name="settings-button" class="menu-button settings-button"/>
             <ui:Button text="Quit" name="quit-button" class="menu-button quit-button"/>
         </ui:VisualElement>
-        <ui:VisualElement name="settings-panel" class="settings-panel hidden" style="background-image: url(&quot;project://database/Assets/Images/DeformedBoxGameEntrance.png?fileID=2800000&amp;guid=7f244f1a9a716484697fd6a922a92c07&amp;type=3#DeformedBoxGameEntrance&quot;);">
+        <ui:VisualElement name="settings-panel" class="settings-panel hidden" style="background-image: none;">
             <ui:Label text="Settings" class="settings-title"/>
             <ui:Label text="Player" class="settings-section-label"/>
             <ui:VisualElement class="setting-row">

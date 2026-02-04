@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            stepTimer = 0.05f; // Ready to play shortly after starting movement
+            stepTimer = 0.05f; 
         }
 
         if (cameraController != null)

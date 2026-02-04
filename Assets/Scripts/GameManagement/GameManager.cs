@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages game-wide state, settings, save/load, and coordinates between different game systems
@@ -10,13 +12,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameSettings gameSettings;
     
     [SerializeField] private PlayerController playerController;
-    
-    public static GameManager Instance { get; private set; }
-    
-    public GameSettings Settings { get { return gameSettings; } }
-    private PlayerController Player { get { return playerController; } }
 
-     public bool gameOver { get; private set; } = false;    
+    [Header("Scene Flow")]
+    [SerializeField] private SceneFader sceneFader;
+    [SerializeField] private string gameOverSceneName = "GameOver";
+    
+    public static GameManager Instance { get; set; }
+    
+    public GameSettings Settings { get; set; }
+    private PlayerController Player { get ; set; }
+
+     public bool gameOver { get;  set; } = false;    
     
     private void Awake()
     {
@@ -46,7 +52,8 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
-
+        if (sceneFader == null)
+            sceneFader = FindFirstObjectByType<SceneFader>();
         ApplySettingsToPlayer();
     }
     
@@ -108,6 +115,13 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager: Setting gameOver to " + isGameOver);
         gameOver = isGameOver;
+        if (isGameOver)
+        {
+            if (sceneFader != null)
+                sceneFader.FadeToScene(gameOverSceneName);
+            else
+                UnityEngine.SceneManagement.SceneManager.LoadScene(gameOverSceneName);
+        }
     }
     
     public void SetMasterVolume(float volume)
@@ -130,8 +144,7 @@ public class GameManager : MonoBehaviour
     public void RestartLevel()
     {
         Time.timeScale = 1f;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
     
     private void OnApplicationPause(bool pauseStatus)
@@ -145,25 +158,4 @@ public class GameManager : MonoBehaviour
         if (!hasFocus)
             SaveGameSettings();
     }
-}
-
-[System.Serializable]
-public class GameSettings
-{
-    [Header("Player Settings")]
-    public float walkSpeed = 15f;
-    public float runSpeed = 37.5f;
-    public float jumpForce = 5f;
-    
-    [Header("Animation Settings")]
-    public float walkAnimationSpeed = 1f;
-    public float runAnimationSpeed = 2.5f;
-    
-    [Header("Audio Settings")]
-    [Range(0f, 1f)]
-    public float masterVolume = 1f;
-    
-    [Header("Graphics Settings")]
-    public bool enableVSync = true;
-    public int targetFrameRate = 60;
 }

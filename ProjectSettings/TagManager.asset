@@ -13,6 +13,7 @@ TagManager:
   - Enemy
   - HorrorCanvas
   - PeacefulCanvas
+  - GameOverScreen
   layers:
   - Default
   - TransparentFX

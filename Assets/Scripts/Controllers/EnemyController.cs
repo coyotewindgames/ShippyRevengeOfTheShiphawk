@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public ZoneController zoneController;
+    public ZoneController  zoneController;
     [SerializeField] private Transform playerTransform; // Assign in inspector or find automatically
     private AudioSource audioSource;
     private bool isChasingPlayer = false;
@@ -54,7 +54,6 @@ public class EnemyController : MonoBehaviour
                     // Use Velocity for dynamic (physical) movement
                     Vector3 velocity = direction * runSpeed;
                     
-                    // Unified fix: Use rb.velocity which works on all Unity versions
                     velocity.y = rb.linearVelocity.y; 
                     rb.linearVelocity = velocity;
 
@@ -62,7 +61,6 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
-                    // Fallback for kinematic/transform movement if setup changes
                     transform.rotation = targetRot;
                     transform.position += direction * runSpeed * Time.fixedDeltaTime;
                 }

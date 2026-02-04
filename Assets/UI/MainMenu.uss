@@ -70,35 +70,6 @@
     scale: 0.98;
 }
 
-/* All buttons share the same blue style now */
-.start-button {
-}
-
-.start-button:hover {
-}
-
-.start-button:active {
-}
-
-.settings-button {
-}
-
-.settings-button:hover {
-}
-
-.settings-button:active {
-}
-
-.quit-button {
-}
-
-.quit-button:hover {
-}
-
-.quit-button:active {
-}
-
-/* ========== SETTINGS PANEL ========== */
 
 .settings-panel {
     position: absolute;
@@ -195,7 +166,6 @@
     height: 40px;
 }
 
-/* ========== HORROR TRANSITION STYLES ========== */
 
 .horror-button {
     background-color: rgba(100, 20, 20, 0.85); /* dark blood red */

@@ -61,23 +61,4 @@ public class Movement
         Vector3 newVelocity = new Vector3(move.x * currentSpeed, rb.linearVelocity.y, move.z * currentSpeed);
         rb.linearVelocity = newVelocity;
     }
-    public void handlePlayerTurning(Vector3 inputDirection)
-    {
-        float horizontalInput = inputDirection.x;
-        
-        if (Mathf.Abs(horizontalInput) > 0.1f)
-        {
-            float rotationAmount = horizontalInput * rotationSpeed * Time.deltaTime * 20f;
-            rb.rotation = rb.rotation * Quaternion.Euler(0, rotationAmount, 0);
-        }
-    }   
-    
-    public void Jump()
-    {
-        if (isGrounded && rb != null)
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false; // Set to false immediately after jumping
-        }
-    }
 }

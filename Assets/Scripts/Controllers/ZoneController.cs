@@ -6,17 +6,15 @@ using System.Linq.Expressions;
 
 public class ZoneController : MonoBehaviour
 {
-    [Tooltip("Assign zone Transforms in order. If empty, will try to find objects tagged 'Zone' or use this object's children.")]
     public Transform[] zones;
 
-    [Tooltip("Enemy prefab to spawn at each zone.")]
     public GameObject enemyPrefab;
 
-    [Tooltip("Minimum delay between spawns (seconds)")]
-    public float minDelay = 2f;
+    [Tooltip("Min Spawn")]
+    public float minDelay = 3f;
 
-    [Tooltip("Maximum delay between spawns (seconds)")]
-    public float maxDelay = 4f;
+    [Tooltip("Max Spawn")]
+    public float maxDelay = 5f;
 
     public static GameManager Instance;
 
@@ -25,6 +23,7 @@ public class ZoneController : MonoBehaviour
     private PlayerController playerController;
 
     private AudioSource audioSource;
+    public AudioClip[] carterClips;
 
     void Start()
     {
@@ -47,7 +46,6 @@ public class ZoneController : MonoBehaviour
         {
             Transform zone = zones[currentIndex];
             SpawnAtZone(zone);
-            
 
             if (currentIndex == zones.Length - 1)
             {
@@ -55,10 +53,14 @@ public class ZoneController : MonoBehaviour
                 yield break;
             }
 
+            yield return new WaitForSeconds(10f);
             float delay = UnityEngine.Random.Range(minDelay, maxDelay);
             yield return new WaitForSeconds(delay);
             currentIndex++;
-            audioSource?.Play();
+         
+            AudioClip clip = carterClips[UnityEngine.Random.Range(0, carterClips.Length)];    
+            audioSource.PlayOneShot(clip);
+            
         }
     }
 
@@ -76,7 +78,7 @@ public class ZoneController : MonoBehaviour
     void SpawnAtZone(Transform zone)
     {
         if (zone == null) return;
-        var spawnPos = new Vector3(zone.position.x, zone.position.y, UnityEngine.Random.Range(zone.position.z - 30f, zone.position.z - 10f));
+        var spawnPos = new Vector3(zone.position.x, zone.position.y, UnityEngine.Random.Range(zone.position.z  + 10f, zone.position.z - 10f));
         spawnPos.y += 0.5f;
         enemyPrefab.transform.position = spawnPos;
     }
