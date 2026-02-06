@@ -54,15 +54,49 @@ public class SceneFader : MonoBehaviour
 
     private IEnumerator FadeOut(string sceneName)
     {
+        Debug.Log("SceneFader: Starting fade to scene: " + sceneName);
+        
+        if (canvasGroup == null)
+        {
+            Debug.LogWarning("SceneFader: CanvasGroup is null, loading scene directly");
+            SceneManager.LoadScene(sceneName);
+            yield break;
+        }
+
         float elapsedTime = 0f;
+        float startAlpha = canvasGroup.alpha;
+        
         while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.unscaledDeltaTime;
-            canvasGroup.alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
+            float progress = Mathf.Clamp01(elapsedTime / fadeDuration);
+            canvasGroup.alpha = Mathf.Lerp(startAlpha, 1f, progress);
             yield return null;
         }
 
-        SceneManager.LoadScene(sceneName);
+        // Ensure fade is complete
+        canvasGroup.alpha = 1f;
+        
+        // Additional delay for WebGL builds
+        yield return new WaitForSecondsRealtime(0.1f);
+        
+        Debug.Log("SceneFader: Loading scene: " + sceneName);
+        
+        // Try to load the scene with error handling
+        try
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("SceneFader: Failed to load scene '" + sceneName + "': " + e.Message);
+            // Fallback - try loading by build index
+            if (sceneName == "GameOverScene")
+            {
+                Debug.Log("SceneFader: Attempting fallback load for GameOverScene by build index");
+                SceneManager.LoadScene(3); // GameOverScene is at index 3 based on build settings
+            }
+        }
     }
 
     private string ResolveSceneName()
