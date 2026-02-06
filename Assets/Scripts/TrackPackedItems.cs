@@ -27,7 +27,7 @@ public class TrackPackedItems : MonoBehaviour
             amountpacked++;
             if (amountpacked >= 3)
             {
-                Debug.Log("Game Over You Win Congrats!");
+                GameManager.Instance.SetGameWin(true);
             }
         }
     }
