@@ -126,7 +126,7 @@ public class MainMenuController : MonoBehaviour
         fpsValue = root.Q<Label>("fps-value");
         
         
-        if (GameManager.Instance != null && GameManager.Instance.Settings != null)
+        if (GameManager.EnsureInstance() != null && GameManager.Instance.Settings != null)
         {
             var settings = GameManager.Instance.Settings;
             
@@ -186,7 +186,14 @@ public class MainMenuController : MonoBehaviour
     
     private void UpdateValueLabels()
     {
-        var settings = GameManager.Instance.Settings;
+        GameManager gameManager = GameManager.EnsureInstance();
+        if (gameManager == null || gameManager.Settings == null)
+        {
+            Debug.LogWarning("MainMenuController: GameManager or Settings is null, cannot update value labels");
+            return;
+        }
+        
+        var settings = gameManager.Settings;
         
         if (walkSpeedValue != null) walkSpeedValue.text = settings.walkSpeed.ToString("F1");
         if (runSpeedValue != null) runSpeedValue.text = settings.runSpeed.ToString("F1");
@@ -228,7 +235,7 @@ public class MainMenuController : MonoBehaviour
         if (isTransitioning) return;
         
         Debug.Log("Start Game clicked!");
-        GameManager.Instance?.SaveGameSettings();
+        GameManager.EnsureInstance()?.SaveGameSettings();
         StartCoroutine(TransitionToGame());
     }
     
@@ -324,7 +331,7 @@ public class MainMenuController : MonoBehaviour
 
     private void OnQuit()
     {
-        GameManager.Instance?.SaveGameSettings();
+        GameManager.EnsureInstance()?.SaveGameSettings();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

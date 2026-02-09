@@ -82,7 +82,7 @@ public class CameraController : MonoBehaviour
     {
         if (!lockCursor) return;
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        Cursor.visible = false;
     }
 
     private static float NormalizeAngle(float angle)

@@ -142,11 +142,12 @@ public class GameOverController : MonoBehaviour
         try
         {
             // Try using GameManager first
-            if (GameManager.Instance != null)
+            GameManager gameManager = GameManager.EnsureInstance();
+            if (gameManager != null)
             {
                 if (enableDebugLogs)
                     Debug.Log("GameOverController: Using GameManager.RestartLevel()");
-                GameManager.Instance.RestartLevel();
+                gameManager.RestartLevel();
                 return;
             }
         }

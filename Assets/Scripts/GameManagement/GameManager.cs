@@ -17,39 +17,100 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; set; }
 
-    public GameSettings Settings { get; set; }
+    // Method to ensure GameManager instance exists
+    public static GameManager EnsureInstance()
+    {
+        if (Instance == null)
+        {
+            GameObject gameManagerObj = new GameObject("GameManager");
+            Instance = gameManagerObj.AddComponent<GameManager>();
+            Debug.Log("GameManager: Emergency instance created");
+        }
+        return Instance;
+    }
+
+    public GameSettings Settings 
+    { 
+        get 
+        {
+            if (gameSettings == null)
+                gameSettings = new GameSettings();
+            return gameSettings;
+        } 
+        set => gameSettings = value; 
+    }
     private PlayerController Player { get; set; }
 
     public bool gameOver { get; set; } = false;
 
     private void Awake()
     {
+        // Ensure only one GameManager exists across all scenes
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             InitializeGame();
             SceneManager.sceneLoaded += OnSceneLoaded;
-            Debug.Log("GameManager: Instance created and persisted");
+            Debug.Log("GameManager: Instance created and persisted across scenes");
         }
-        else
+        else if (Instance != this)
         {
-            Debug.Log("GameManager: Duplicate instance destroyed");
+            Debug.Log("GameManager: Duplicate instance found and destroyed");
             Destroy(gameObject);
+            return;
         }
+
+        // Ensure the instance is always accessible
+        if (Instance == null)
+            Instance = this;
     }
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        // Only unsubscribe if this is the actual singleton instance
+        if (Instance == this)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            Instance = null;
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        sceneFader = FindFirstObjectByType<SceneFader>();
-        playerController = FindFirstObjectByType<PlayerController>();
-        ApplySettingsToPlayer();
+Debug.Log($"GameManager: Scene '{scene.name}' loaded, refreshing references");
+
+// Always refresh references when a new scene loads
+sceneFader = FindFirstObjectByType<SceneFader>();
+playerController = FindFirstObjectByType<PlayerController>();
+
+// Ensure settings are applied to any new player controller
+ApplySettingsToPlayer();
+
+// Refresh GameManager reference in UI controllers
+RefreshUIControllers();
+}
+
+private void RefreshUIControllers()
+{
+    // Find and refresh MainMenuController if it exists
+    MainMenuController mainMenuController = FindFirstObjectByType<MainMenuController>();
+    if (mainMenuController != null)
+    {
+        Debug.Log("GameManager: MainMenuController found, ensuring connection");
+        // The MainMenuController should automatically reconnect via GameManager.Instance
     }
+
+    // Find and refresh GameOverController if it exists  
+    GameOverController gameOverController = FindFirstObjectByType<GameOverController>();
+    if (gameOverController != null)
+    {
+        Debug.Log("GameManager: GameOverController found, ensuring connection");
+        // The GameOverController should automatically reconnect via GameManager.Instance
+    }
+
+    // Any other UI controllers can be added here
+}
 
     private void InitializeGame()
     {
@@ -124,7 +185,26 @@ public class GameManager : MonoBehaviour
     public void SetGameWin(bool isWin, string targetScene = "WinScene")
     {
         Debug.Log("GameManager: Setting gameWin to " + isWin);
-        sceneFader.FadeToScene(targetScene);
+        
+        if (isWin)
+        {
+            SaveGameSettings();
+            
+            // Unlock cursor for UI scenes
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            
+            if (sceneFader != null)
+            {
+                Debug.Log("GameManager: Using SceneFader to transition to " + targetScene);
+                sceneFader.FadeToScene(targetScene);
+            }
+            else
+            {
+                Debug.LogWarning("GameManager: SceneFader not found, loading scene directly");
+                StartCoroutine(LoadSceneDirectly(targetScene));
+            }
+        }
     }
 
     public void SetGameOver(bool isGameOver)
@@ -133,6 +213,10 @@ public class GameManager : MonoBehaviour
         gameOver = isGameOver;
         if (isGameOver)
         {
+            // Unlock cursor for UI scenes
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            
             string targetScene = ResolveGameOverSceneName();
 
             if (!string.IsNullOrWhiteSpace(targetScene))
