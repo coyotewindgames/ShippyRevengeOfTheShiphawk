@@ -1,0 +1,67 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="UI/MainMenu.uss" />
+    <ui:VisualElement class="main-menu-container">
+        <!-- Title -->
+        <ui:Label text="Kevins Wonderful Day" class="title-label" />
+        
+        <!-- Button Container -->
+        <ui:VisualElement class="button-container">
+            <ui:Button text="Start Game" name="start-button" class="menu-button start-button" />
+            <ui:Button text="Settings" name="settings-button" class="menu-button settings-button" />
+            <ui:Button text="Quit" name="quit-button" class="menu-button quit-button" />
+        </ui:VisualElement>
+        
+        <!-- Settings Panel (hidden by default) -->
+        <ui:VisualElement name="settings-panel" class="settings-panel hidden">
+            <ui:Label text="Settings" class="settings-title" />
+            
+            <!-- Player Settings -->
+            <ui:Label text="Player" class="settings-section-label" />
+            
+            <ui:VisualElement class="setting-row">
+                <ui:Label text="Walk Speed" class="setting-label" />
+                <ui:Slider name="walk-speed-slider" low-value="5" high-value="30" value="15" class="setting-slider" />
+                <ui:Label name="walk-speed-value" text="15" class="setting-value" />
+            </ui:VisualElement>
+            
+            <ui:VisualElement class="setting-row">
+                <ui:Label text="Run Speed" class="setting-label" />
+                <ui:Slider name="run-speed-slider" low-value="20" high-value="60" value="37.5" class="setting-slider" />
+                <ui:Label name="run-speed-value" text="37.5" class="setting-value" />
+            </ui:VisualElement>
+            
+            <ui:VisualElement class="setting-row">
+                <ui:Label text="Jump Force" class="setting-label" />
+                <ui:Slider name="jump-force-slider" low-value="1" high-value="15" value="5" class="setting-slider" />
+                <ui:Label name="jump-force-value" text="5" class="setting-value" />
+            </ui:VisualElement>
+            
+            <!-- Audio Settings -->
+            <ui:Label text="Audio" class="settings-section-label" />
+            
+            <ui:VisualElement class="setting-row">
+                <ui:Label text="Master Volume" class="setting-label" />
+                <ui:Slider name="volume-slider" low-value="0" high-value="1" value="1" class="setting-slider" />
+                <ui:Label name="volume-value" text="100%" class="setting-value" />
+            </ui:VisualElement>
+            
+            <!-- Graphics Settings -->
+            <ui:Label text="Graphics" class="settings-section-label" />
+            
+            <ui:VisualElement class="setting-row">
+                <ui:Label text="VSync" class="setting-label" />
+                <ui:Toggle name="vsync-toggle" value="true" class="setting-toggle" />
+            </ui:VisualElement>
+            
+            <ui:VisualElement class="setting-row">
+                <ui:Label text="Target FPS" class="setting-label" />
+                <ui:SliderInt name="fps-slider" low-value="30" high-value="144" value="60" class="setting-slider" />
+                <ui:Label name="fps-value" text="60" class="setting-value" />
+            </ui:VisualElement>
+            
+            <!-- Close Button -->
+            <ui:Button text="Close" name="close-settings-button" class="menu-button close-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+</ui:UXML>
