@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Inheritance: PlayerController inherits from MonoBehaviour, gaining access to Unity lifecycle methods
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Systems")]

@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class Movement
 {
+    // Encapsulation: private fields are exposed through public properties with validation logic
     [Header("Movement Settings")]
     [SerializeField] private float walkSpeed = 15f;
     [SerializeField] private float runSpeed = 37.5f;

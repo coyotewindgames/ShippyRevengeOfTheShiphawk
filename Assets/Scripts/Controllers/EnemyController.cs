@@ -3,13 +3,13 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public ZoneController zoneController;
-    [SerializeField] private Transform playerTransform; // Assign in inspector or find automatically
+    [SerializeField] private Transform playerTransform; 
     private AudioSource audioSource;
     [SerializeField] private AudioClip hitClip;
     private bool isChasingPlayer = false;
     private Animator animator;
     [SerializeField] private float runSpeed = 5f;
-    [SerializeField] private float collisionDistance = 1.5f; // Distance to trigger collision in WebGL builds
+    [SerializeField] private float collisionDistance = 1.5f; 
 
     private PlayerController playerController;
     private bool hasTriggeredGameOver = false;
@@ -19,12 +19,10 @@ public class EnemyController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
 
-        // Ensure Rigidbody exists and is Dynamic (Not Kinematic) for correct collision events
         Rigidbody rb = GetComponent<Rigidbody>();
-        // IMPORTANT: Must be false to generate collision events while moving
         rb.isKinematic = false;
         rb.useGravity = true;
-        // Continuous detection prevents passing through objects at high speed
+       
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
 
@@ -43,11 +41,9 @@ public class EnemyController : MonoBehaviour
     {
         if (isChasingPlayer && playerTransform != null)
         {
-            // Check distance-based collision for WebGL builds (backup method)
             float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
             if (!hasTriggeredGameOver && distanceToPlayer <= collisionDistance)
             {
-                Debug.Log("EnemyController: Distance-based collision triggered at distance: " + distanceToPlayer);
                 TriggerPlayerCaught();
                 return;
             }
@@ -119,17 +115,13 @@ public class EnemyController : MonoBehaviour
         animator.SetBool("FinalZone", false);
         audioSource.PlayOneShot(hitClip);
 
-        Debug.Log("EnemyController: Player caught, triggering game over");
 
-        // Trigger game over
         if (playerController != null)
         {
             playerController.TriggerGameOver();
         }
         else
         {
-            // Fallback if PlayerController component isn't found
-            Debug.LogWarning("PlayerController not found, using GameManager directly");
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.SetGameOver(true);
@@ -137,26 +129,20 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // Physics collision detection (primary method)
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("EnemyController: Collision detected with " + collision.gameObject.name + " (Tag: " + collision.gameObject.tag + ")");
 
         if (collision.gameObject.CompareTag("Player") && !hasTriggeredGameOver)
         {
-            Debug.Log("EnemyController: Player collision confirmed via OnCollisionEnter");
             TriggerPlayerCaught();
         }
     }
 
-    // Trigger collision detection (backup method for WebGL)
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("EnemyController: Trigger detected with " + other.gameObject.name + " (Tag: " + other.gameObject.tag + ")");
 
         if (other.CompareTag("Player") && !hasTriggeredGameOver)
         {
-            Debug.Log("EnemyController: Player collision confirmed via OnTriggerEnter");
             TriggerPlayerCaught();
         }
     }

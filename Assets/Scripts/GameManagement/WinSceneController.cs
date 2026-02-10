@@ -13,11 +13,9 @@ public class WinSceneController : MonoBehaviour
     {
         Debug.Log("WinSceneController: Initializing Win scene");
 
-        // Unlock cursor so buttons are clickable
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Find buttons if not assigned
         if (restartButton == null)
             restartButton = FindButtonByNames("RestartButton", "PlayAgainButton", "Restart", "PlayAgain", "TryAgain", "TryAgainButton");
 
@@ -27,7 +25,6 @@ public class WinSceneController : MonoBehaviour
         if (quitButton == null)
             quitButton = FindButtonByNames("QuitButton", "ExitButton", "Quit", "Exit");
 
-        // Wire up buttons programmatically
         if (restartButton != null)
         {
             restartButton.onClick.RemoveAllListeners();
@@ -60,7 +57,6 @@ public class WinSceneController : MonoBehaviour
                 Button button = buttonObj.GetComponent<Button>();
                 if (button != null)
                 {
-                    Debug.Log($"WinSceneController: Found button '{name}'");
                     return button;
                 }
             }
@@ -70,7 +66,6 @@ public class WinSceneController : MonoBehaviour
 
     public void OnRestart()
     {
-        Debug.Log("WinSceneController: Restart clicked");
         GameManager gm = GameManager.EnsureInstance();
         if (gm != null)
         {
@@ -85,7 +80,6 @@ public class WinSceneController : MonoBehaviour
 
     public void OnMainMenu()
     {
-        Debug.Log("WinSceneController: Main Menu clicked");
         GameManager gm = GameManager.EnsureInstance();
         if (gm != null)
         {
@@ -99,7 +93,6 @@ public class WinSceneController : MonoBehaviour
 
     public void OnQuit()
     {
-        Debug.Log("WinSceneController: Quit clicked");
         GameManager gm = GameManager.EnsureInstance();
         if (gm != null)
         {

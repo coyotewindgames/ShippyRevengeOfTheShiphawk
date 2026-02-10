@@ -17,27 +17,25 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; set; }
 
-    // Method to ensure GameManager instance exists
     public static GameManager EnsureInstance()
     {
         if (Instance == null)
         {
             GameObject gameManagerObj = new GameObject("GameManager");
             Instance = gameManagerObj.AddComponent<GameManager>();
-            Debug.Log("GameManager: Emergency instance created");
         }
         return Instance;
     }
 
-    public GameSettings Settings 
-    { 
-        get 
+    public GameSettings Settings
+    {
+        get
         {
             if (gameSettings == null)
                 gameSettings = new GameSettings();
             return gameSettings;
-        } 
-        set => gameSettings = value; 
+        }
+        set => gameSettings = value;
     }
     private PlayerController Player { get; set; }
 
@@ -45,30 +43,26 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Ensure only one GameManager exists across all scenes
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             InitializeGame();
             SceneManager.sceneLoaded += OnSceneLoaded;
-            Debug.Log("GameManager: Instance created and persisted across scenes");
         }
         else if (Instance != this)
         {
-            Debug.Log("GameManager: Duplicate instance found and destroyed");
+
             Destroy(gameObject);
             return;
         }
 
-        // Ensure the instance is always accessible
         if (Instance == null)
             Instance = this;
     }
 
     private void OnDestroy()
     {
-        // Only unsubscribe if this is the actual singleton instance
         if (Instance == this)
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -78,39 +72,23 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-Debug.Log($"GameManager: Scene '{scene.name}' loaded, refreshing references");
 
-// Always refresh references when a new scene loads
-sceneFader = FindFirstObjectByType<SceneFader>();
-playerController = FindFirstObjectByType<PlayerController>();
+        sceneFader = FindFirstObjectByType<SceneFader>();
+        playerController = FindFirstObjectByType<PlayerController>();
 
-// Ensure settings are applied to any new player controller
-ApplySettingsToPlayer();
+        ApplySettingsToPlayer();
 
-// Refresh GameManager reference in UI controllers
-RefreshUIControllers();
-}
-
-private void RefreshUIControllers()
-{
-    // Find and refresh MainMenuController if it exists
-    MainMenuController mainMenuController = FindFirstObjectByType<MainMenuController>();
-    if (mainMenuController != null)
-    {
-        Debug.Log("GameManager: MainMenuController found, ensuring connection");
-        // The MainMenuController should automatically reconnect via GameManager.Instance
+        RefreshUIControllers();
     }
 
-    // Find and refresh GameOverController if it exists  
-    GameOverController gameOverController = FindFirstObjectByType<GameOverController>();
-    if (gameOverController != null)
+    private void RefreshUIControllers()
     {
-        Debug.Log("GameManager: GameOverController found, ensuring connection");
-        // The GameOverController should automatically reconnect via GameManager.Instance
-    }
+        MainMenuController mainMenuController = FindFirstObjectByType<MainMenuController>();
 
-    // Any other UI controllers can be added here
-}
+
+        GameOverController gameOverController = FindFirstObjectByType<GameOverController>();
+
+    }
 
     private void InitializeGame()
     {
@@ -140,6 +118,7 @@ private void RefreshUIControllers()
         gameSettings.masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
     }
 
+    // Abstraction: SaveGameSettings() hides the complex persistence logic behind a simple method call
     public void SaveGameSettings()
     {
         PlayerPrefs.SetFloat("WalkSpeed", gameSettings.walkSpeed);
@@ -184,24 +163,21 @@ private void RefreshUIControllers()
 
     public void SetGameWin(bool isWin, string targetScene = "WinScene")
     {
-        Debug.Log("GameManager: Setting gameWin to " + isWin);
-        
+
         if (isWin)
         {
             SaveGameSettings();
-            
+
             // Unlock cursor for UI scenes
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            
+
             if (sceneFader != null)
             {
-                Debug.Log("GameManager: Using SceneFader to transition to " + targetScene);
                 sceneFader.FadeToScene(targetScene);
             }
             else
             {
-                Debug.LogWarning("GameManager: SceneFader not found, loading scene directly");
                 StartCoroutine(LoadSceneDirectly(targetScene));
             }
         }
@@ -209,40 +185,32 @@ private void RefreshUIControllers()
 
     public void SetGameOver(bool isGameOver)
     {
-        Debug.Log("GameManager: Setting gameOver to " + isGameOver);
         gameOver = isGameOver;
         if (isGameOver)
         {
-            // Unlock cursor for UI scenes
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            
+
             string targetScene = ResolveGameOverSceneName();
 
             if (!string.IsNullOrWhiteSpace(targetScene))
             {
                 if (sceneFader != null)
                 {
-                    Debug.Log("GameManager: Using SceneFader to transition to " + targetScene);
                     sceneFader.FadeToScene(targetScene);
                 }
                 else
                 {
                     // Fallback for WebGL builds when SceneFader isn't available
-                    Debug.LogWarning("GameManager: SceneFader not found, loading scene directly");
                     StartCoroutine(LoadSceneDirectly(targetScene));
                 }
-            }
-            else
-            {
-                Debug.LogError("GameManager: Target scene name is null or empty!");
+
             }
         }
     }
 
     private System.Collections.IEnumerator LoadSceneDirectly(string sceneName)
     {
-        // Give a brief moment for any ongoing processes to complete
         yield return new WaitForSeconds(0.5f);
         Debug.Log("GameManager: Loading scene directly: " + sceneName);
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
@@ -284,23 +252,20 @@ private void RefreshUIControllers()
         Time.timeScale = 1f;
         gameOver = false;
 
-        // Use SceneFader if available, otherwise load directly
         string mainSceneName = "MainScene";
         if (sceneFader != null)
         {
-            Debug.Log("GameManager: Using SceneFader to restart to " + mainSceneName);
             sceneFader.FadeToScene(mainSceneName);
         }
         else
         {
-            Debug.Log("GameManager: SceneFader not found, loading scene directly");
+            StartCoroutine(RestartLevelDirectly(mainSceneName));
             StartCoroutine(RestartLevelDirectly(mainSceneName));
         }
     }
 
     public void QuitGame()
     {
-        Debug.Log("GameManager: QuitGame called");
         SaveGameSettings();
 
 #if UNITY_EDITOR
@@ -312,7 +277,6 @@ private void RefreshUIControllers()
 
     public static void ForceQuitGame()
     {
-        Debug.Log("GameManager: ForceQuitGame called (static method)");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -338,7 +302,6 @@ private void RefreshUIControllers()
             }
             catch (System.Exception e2)
             {
-                Debug.LogError("GameManager: ForceRestartLevel by index failed: " + e2.Message);
             }
         }
     }
@@ -352,7 +315,6 @@ private void RefreshUIControllers()
         }
         catch (System.Exception e)
         {
-            Debug.LogError("GameManager: Failed to load IntroScene: " + e.Message);
             // Fallback to build index for intro scene
             try
             {
@@ -360,7 +322,6 @@ private void RefreshUIControllers()
             }
             catch (System.Exception e2)
             {
-                Debug.LogError("GameManager: Failed to load intro scene by index: " + e2.Message);
 
 #if !UNITY_WEBGL
             // Only quit in non-WebGL builds
@@ -377,14 +338,11 @@ private void RefreshUIControllers()
 
         try
         {
-            Debug.Log("GameManager: Loading scene directly: " + sceneName);
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
         }
         catch (System.Exception e)
         {
-            Debug.LogError("GameManager: Failed to load scene '" + sceneName + "': " + e.Message);
             // Fallback to build index
-            Debug.Log("GameManager: Attempting fallback load by build index");
             UnityEngine.SceneManagement.SceneManager.LoadScene(2);
         }
     }

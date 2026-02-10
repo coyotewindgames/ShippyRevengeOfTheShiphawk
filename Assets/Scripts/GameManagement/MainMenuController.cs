@@ -187,12 +187,6 @@ public class MainMenuController : MonoBehaviour
     private void UpdateValueLabels()
     {
         GameManager gameManager = GameManager.EnsureInstance();
-        if (gameManager == null || gameManager.Settings == null)
-        {
-            Debug.LogWarning("MainMenuController: GameManager or Settings is null, cannot update value labels");
-            return;
-        }
-        
         var settings = gameManager.Settings;
         
         if (walkSpeedValue != null) walkSpeedValue.text = settings.walkSpeed.ToString("F1");
@@ -234,7 +228,6 @@ public class MainMenuController : MonoBehaviour
     {
         if (isTransitioning) return;
         
-        Debug.Log("Start Game clicked!");
         GameManager.EnsureInstance()?.SaveGameSettings();
         StartCoroutine(TransitionToGame());
     }
@@ -321,7 +314,6 @@ public class MainMenuController : MonoBehaviour
     
     private void OnCloseSettings()
     {
-        Debug.Log("Close Settings clicked!");
         if (settingsPanel != null)
         {
             settingsPanel.AddToClassList("hidden");

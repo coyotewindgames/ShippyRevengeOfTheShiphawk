@@ -54,11 +54,9 @@ public class SceneFader : MonoBehaviour
 
     private IEnumerator FadeOut(string sceneName)
     {
-        Debug.Log("SceneFader: Starting fade to scene: " + sceneName);
         
         if (canvasGroup == null)
         {
-            Debug.LogWarning("SceneFader: CanvasGroup is null, loading scene directly");
             SceneManager.LoadScene(sceneName);
             yield break;
         }
@@ -74,27 +72,20 @@ public class SceneFader : MonoBehaviour
             yield return null;
         }
 
-        // Ensure fade is complete
         canvasGroup.alpha = 1f;
         
-        // Additional delay for WebGL builds
         yield return new WaitForSecondsRealtime(0.1f);
         
-        Debug.Log("SceneFader: Loading scene: " + sceneName);
         
-        // Try to load the scene with error handling
         try
         {
             SceneManager.LoadScene(sceneName);
         }
         catch (System.Exception e)
         {
-            Debug.LogError("SceneFader: Failed to load scene '" + sceneName + "': " + e.Message);
-            // Fallback - try loading by build index
             if (sceneName == "GameOverScene")
             {
-                Debug.Log("SceneFader: Attempting fallback load for GameOverScene by build index");
-                SceneManager.LoadScene(3); // GameOverScene is at index 3 based on build settings
+                SceneManager.LoadScene(3); 
             }
         }
     }
